@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JList;
+import javax.swing.plaf.basic.BasicBorders;
 
 import springclient.DefaultSwingComponent;
 import crudbeam.action.Action;
@@ -20,6 +21,7 @@ public class List extends DefaultSwingComponent< List, JList > implements MouseL
 		super( new JList() );
 
 		toSwing().setPreferredSize( preferredSize );
+		toSwing().setBorder( BasicBorders.getTextFieldBorder() );
 		listModel = listData;
 		
 		toSwing().setModel( listModel );
