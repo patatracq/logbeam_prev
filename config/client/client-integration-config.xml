@@ -48,11 +48,6 @@
 		<property name="databaseContainerId" value="agentDatabaseContainer" />
 	</bean>
 	
-	<bean id="agentTemplateCyberspaceContainer" class="logbeam.business.agenttemplate.AgentTemplateCyberspaceContainer">
-		<property name="client" ref="clientIntegrationClient" />
-		<property name="databaseContainerId" value="agentTemplateDatabaseContainer" />
-	</bean>
-	
 	<bean id="logMessageCyberspaceContainer" class="logbeam.business.logmessage.LogMessageCyberspaceContainer">
 		<property name="client" ref="clientIntegrationClient" />
 		<property name="databaseContainerId" value="logMessageDatabaseContainer" />

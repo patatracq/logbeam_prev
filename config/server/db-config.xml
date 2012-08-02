@@ -36,9 +36,7 @@
 		<property name="annotatedClasses">
 			<list>
 				<value>logbeam.business.Agent</value>
-				<value>logbeam.business.AgentTemplate</value>
 				<value>logbeam.business.LogFile</value>
-				<value>logbeam.business.LogFileTemplate</value>
 				<value>logbeam.business.LogMessage</value>
 				<value>logbeam.business.LogMessageFilter</value>
 			</list>
@@ -62,17 +60,9 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="agentTemplateDatabaseContainer" class="logbeam.business.agenttemplate.AgentTemplateDatabaseContainer">
-		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>
-
 	<bean id="logFileDatabaseContainer" class="logbeam.business.logfile.LogFileDatabaseContainer">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>	
-
-	<!-- bean id="logFileTemplateDatabaseContainer" class="logbeam.business.logfiletemplate.LogFileTemplateDatabaseContainer">
-		<property name="sessionFactory" ref="sessionFactory" />
-	</bean-->	
 
 	<bean id="logMessageDatabaseContainer" class="logbeam.business.logmessage.LogMessageDatabaseContainer">
 		<property name="sessionFactory" ref="sessionFactory" />

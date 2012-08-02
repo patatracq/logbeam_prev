@@ -34,10 +34,6 @@
 		<property name="logMessageFilterContainer" ref="logMessageFilterCyberspaceContainer" />
 	</bean>
 
-	<bean id="agentTemplateTable" class="logbeam.client.AgentTemplateTable">
-		<property name="agentTemplateContainer" ref="agentTemplateCyberspaceContainer" />
-	</bean>
-
 	<bean class="springclient.SpringClient">
 		<constructor-arg><bean class="springclient.lookandfeel.System" /></constructor-arg>
 		
@@ -46,7 +42,6 @@
 			<list>
 				<ref bean="agentTree" />
 				<ref bean="messageFiltersTable" />
-				<ref bean="agentTemplateTable" />
 			</list>
 		</property>
 		
@@ -72,10 +67,6 @@
 							<bean class="springclient.menu.MenuItem">
 								<property name="caption" value="Add..." />
 								<property name="action" ref="newAgentAction" />
-							</bean>
-							<bean class="springclient.menu.MenuItem">
-								<property name="caption" value="Add Template..." />
-								<property name="action" ref="openAgentTemplateDialogAction" />
 							</bean>
 						</list></property>
 					</bean>
@@ -162,22 +153,6 @@
 								</array></property>
 							</bean></constructor-arg>
 							<property name="doubleClickAction" ref="editFilterAction" />
-						</bean>
-					</constructor-arg></bean></entry>
-					
-					<entry key="Agent Templates"><bean class="springclient.panel.Scroll"><constructor-arg>
-						<bean class="springclient.table.Table">
-							<constructor-arg><bean class="springclient.table.GenericTableModel">
-								<constructor-arg><ref bean="agentTemplateTable" /></constructor-arg>
-								<property name="columns"><array>
-									<bean class="springclient.table.Column">
-										<property name="caption" value="Agent Template" />
-										<property name="type" value="java.lang.String" />
-										<property name="width" value="300" />
-									</bean>
-								</array></property>
-							</bean></constructor-arg>
-							<property name="doubleClickAction" ref="editAgentTemplateAction" />
 						</bean>
 					</constructor-arg></bean></entry>
 				</map></property>

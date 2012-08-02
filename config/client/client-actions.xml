@@ -98,57 +98,6 @@
 		<property name="regexTextArea" ref="regexTextArea" />
 	</bean>
 
-	<!-- Template Actions -->
-	<bean id="openAgentTemplateDialogAction" class="crudbeam.action.ActionChain">
-		<property name="actions"><list>
-			<bean class="springclient.action.ResetBinding"><property name="binding" ref="agentTemplateNameBinding" /></bean>
-			<bean class="springclient.action.ResetBinding"><property name="binding" ref="agentTemplateLogFilesBinding" /></bean>
-		 	<bean class="springclient.action.OpenDialog"><property name="dialog" ref="agentTemplateDetailDialog" /></bean>
-		</list></property>
-	</bean>
-	
-	<bean id="editAgentTemplateAction" class="crudbeam.action.ActionChain">
-		<property name="actions"><list>
-			<bean class="springclient.action.ResetBinding"><property name="binding" ref="agentTemplateNameBinding" /></bean>
-			<bean class="springclient.action.ResetBinding"><property name="binding" ref="agentTemplateLogFilesBinding" /></bean>
-
-			<bean class="logbeam.client.action.template.GetSelectedTemplate">
-				<property name="name" ref="agentTemplateNameBinding" />
-				<property name="logFiles" ref="agentTemplateLogFilesBinding" />
-			</bean>
-			
-		 	<bean class="springclient.action.OpenDialog"><property name="dialog" ref="agentTemplateDetailDialog" /></bean>
-		</list></property>
-	</bean>
-	
-	<bean id="openLogFileTemplateAction" class="crudbeam.action.ActionChain">
-		<property name="actions"><list>
-			<bean class="springclient.action.ResetBinding"><property name="binding" ref="logFileTemplateNameBinding" /></bean>
-			<bean class="springclient.action.OpenDialog"><property name="dialog" ref="logFileTemplateDetailDialog" /></bean>
-		</list></property>
-	</bean>
-	
-	<bean id="addLogFileTemplateAction" class="crudbeam.action.ActionChain">
-		<property name="actions"><list>
-			<bean class="logbeam.client.action.template.AddLogFileTemplate">
-				<property name="name" ref="logFileTemplateNameBinding" />
-				<property name="logFiles" ref="agentTemplateLogFilesBinding" />
-			</bean>
-		</list></property>
-	</bean>
-	
-	<bean id="saveAgentTemplateAction" class="crudbeam.action.SaveBinding">
-		<property name="binding" ref="agentTemplateNameBinding" />
-	</bean>
-
-	<bean id="deleteAgentTemplateAction" class="crudbeam.action.DeleteBinding">
-		<property name="binding" ref="agentTemplateNameBinding" />
-	</bean>
-	
-	<!-- bean id="chooseTemplateAction" class="springclient.action.OpenDialog">
-		<property name="dialog" ref="selectAgentTemplateDialog" />
-	</bean-->
-	
 	<!-- Agent Actions -->
 	<bean id="newAgentAction" class="crudbeam.action.ActionChain">
 		<property name="actions"><list>
