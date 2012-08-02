@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * This file is part of log-beam.
+ * 
+ * log-beam is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * log-beam is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with log-beam.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beans
+		xmlns="http://www.springframework.org/schema/beans"
+		xmlns:si="http://www.springframework.org/schema/integration"
+		xmlns:ip="http://www.springframework.org/schema/integration/ip"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/integration
+			http://www.springframework.org/schema/integration/spring-integration.xsd
+			http://www.springframework.org/schema/integration/ip
+			http://www.springframework.org/schema/integration/ip/spring-integration-ip.xsd">
+
+	<si:channel id="ipAgentServiceRequestChannel" />
+	<si:channel id="ipAgentServiceReplyChannel" />
+	
+	<ip:tcp-connection-factory id="agentConnectionFactory"
+			type="server"
+			host="localhost"
+			port="16100"
+			single-use="true"
+			so-timeout="10000" />
+			
+	<ip:tcp-inbound-gateway
+			request-channel="ipAgentServiceRequestChannel"
+			reply-channel="ipAgentServiceReplyChannel"
+			connection-factory="agentConnectionFactory" />
+
+	<si:chain id="transformAgentRequest"
+			input-channel="ipAgentServiceRequestChannel"
+			output-channel="agentServiceRequestChannel">
+		<si:transformer><bean class="integration.transformers.Ip2MessageTransformer" /></si:transformer>
+		<si:transformer><bean class="integration.transformers.JonasUnmarshallingTransformer" /></si:transformer>
+	</si:chain>
+
+	<si:chain id="transformAgentReply"
+			input-channel="agentServiceReplyChannel"
+			output-channel="ipAgentServiceReplyChannel">
+		<si:transformer><bean class="integration.transformers.JonasMarshallingTransformer">
+			<property name="formattedOutput" value="false" />
+		</bean></si:transformer>
+		<si:transformer><bean class="integration.transformers.Message2IpTransformer" /></si:transformer>
+	</si:chain>
+
+	<bean id="agentIntegrationServer" class="integration.IntegrationServer" />
+		
+	<si:service-activator
+			input-channel="agentServiceRequestChannel"
+			output-channel="agentServiceReplyChannel"
+			ref="agentIntegrationServer" />
+</beans>
+			

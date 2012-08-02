@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * This file is part of log-beam.
+ * 
+ * log-beam is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * log-beam is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with log-beam.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beans
+		xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<import resource="client-integration-config.xml" />
+	<import resource="springclient-constants.xml" />
+	
+	<import resource="client-main.xml" />
+	<import resource="springclient-errordialog.xml" />
+	<import resource="client-bindings.xml" />
+	<import resource="client-actions.xml" />
+	<import resource="client-events.xml" />
+
+	<import resource="dialog-addfilter.xml" />
+	<import resource="dialog-agentdetail.xml" />
+	<import resource="dialog-agenttemplatedetail.xml" />
+	<import resource="dialog-getnewerthan.xml" />
+	<import resource="dialog-logfiletemplatedetail.xml" />
+	<import resource="dialog-logmessagedetail.xml" />
+	<!--import resource="client-dialog-selectagenttemplate.xml" /-->
+</beans>

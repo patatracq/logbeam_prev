@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * This file is part of log-beam.
+ * 
+ * log-beam is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * log-beam is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with log-beam.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beans
+		xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- GUI Spec -->
+	<bean id="agentTree" class="logbeam.client.AgentTree">
+		<property name="agentContainer" ref="agentCyberspaceContainer" />
+	</bean>
+
+	<bean id="logMessagesTable" class="logbeam.client.LogMessagesTable" />
+	
+	<bean id="messageFiltersTable" class="logbeam.client.MessageFiltersTable">
+		<property name="logMessageFilterContainer" ref="logMessageFilterCyberspaceContainer" />
+	</bean>
+
+	<bean id="agentTemplateTable" class="logbeam.client.AgentTemplateTable">
+		<property name="agentTemplateContainer" ref="agentTemplateCyberspaceContainer" />
+	</bean>
+
+	<bean class="springclient.SpringClient">
+		<constructor-arg><bean class="springclient.lookandfeel.System" /></constructor-arg>
+		
+		<!-- Stuff to load after the main window has been created (and after IoC containter creation) -->
+		<property name="loadables">
+			<list>
+				<ref bean="agentTree" />
+				<ref bean="messageFiltersTable" />
+				<ref bean="agentTemplateTable" />
+			</list>
+		</property>
+		
+		<!-- Main Window -->
+		<property name="mainWindow"><bean class="springclient.Window">
+			<property name="title" value="LogBeam 0.7" />
+			
+			<property name="windowMenuBar"><bean class="springclient.menu.MenuBar">
+				<property name="menus"><list>
+					<bean class="springclient.menu.Menu">
+						<property name="caption" value="File" />
+						<property name="items"><list>
+							<bean class="springclient.menu.MenuItem">
+								<property name="caption" value="Exit" />
+								<property name="action"><bean class="springclient.action.Exit" /></property>
+							</bean>
+						</list></property>
+					</bean>
+					
+					<bean class="springclient.menu.Menu">
+						<property name="caption" value="Agents" />
+						<property name="items"><list>
+							<bean class="springclient.menu.MenuItem">
+								<property name="caption" value="Add..." />
+								<property name="action" ref="newAgentAction" />
+							</bean>
+							<bean class="springclient.menu.MenuItem">
+								<property name="caption" value="Add Template..." />
+								<property name="action" ref="openAgentTemplateDialogAction" />
+							</bean>
+						</list></property>
+					</bean>
+					
+					<bean class="springclient.menu.Menu">
+						<property name="caption" value="Messages" />
+						<property name="items"><list>
+							<bean class="springclient.menu.CheckBoxMenuItem">
+								<property name="caption" value="Pause" />
+								<property name="action" ref="pauseMessagesAction" />
+							</bean>
+							
+							<bean class="springclient.menu.MenuItem">
+								<property name="caption" value="Clear Client Cache"/>
+								<property name="action" ref="clearClientCacheAction" />
+							</bean>
+							
+							<bean class="springclient.menu.MenuItem">
+								<property name="caption" value="Get Newer Than..." />
+								<property name="action" ref="getNewerThanAction" />
+							</bean>
+						</list></property>
+					</bean>
+				</list></property>
+			</bean></property>
+			
+			<property name="mainPanel"><bean class="springclient.panel.TabPanel">
+				<property name="tabs"><map>
+					<entry key="Log Messages"><bean class="springclient.panel.XSplitPanel">
+						<property name="left"><bean class="springclient.panel.Scroll">
+							<constructor-arg><bean class="springclient.tree.Tree">
+								<constructor-arg><bean class="springclient.tree.GenericTreeModel"><constructor-arg ref="agentTree" /></bean></constructor-arg>
+								<property name="selectionModel"><bean class="springclient.tree.SelectionModelDiscontiguos" /></property>
+								<property name="renderer"><bean class="logbeam.client.AgentTreeCellRenderer" /></property>
+								<property name="selectAction" ref="selectAgentsAction" />
+								<property name="doubleClickAction" ref="editAgentAction" />
+							</bean></constructor-arg>
+							
+							<property name="preferredSize"><bean class="springclient.GoldenRatioDimension"><property name="height" value="400" /></bean></property>
+						</bean></property>
+						
+						<property name="right"><bean class="springclient.panel.Scroll"><constructor-arg>
+							<bean class="springclient.table.Table">
+								<constructor-arg><bean class="springclient.table.GenericTableModel">
+									<constructor-arg ref="logMessagesTable" />
+									<property name="columns"><array>
+										<bean class="springclient.table.Column">
+											<property name="caption" value="Agent" />
+											<property name="type" value="java.lang.String" />
+											<property name="width" value="100" />
+										</bean>
+										<bean class="springclient.table.Column">
+											<property name="caption" value="Log File" />
+											<property name="type" value="java.lang.String" />
+											<property name="width" value="200" />
+										</bean>
+										<bean class="springclient.table.Column">
+											<property name="caption" value="Log Message" />
+											<property name="type" value="java.lang.String" />
+											<property name="width" value="400" />
+										</bean>
+									</array></property>
+								</bean></constructor-arg>
+								<property name="doubleClickAction" ref="openLogMessageDetailAction" />
+							</bean>
+						</constructor-arg></bean></property>
+					</bean></entry>
+					
+					<entry key="Message Filters"><bean class="springclient.panel.Scroll"><constructor-arg>
+						<bean class="springclient.table.Table">
+							<constructor-arg><bean class="springclient.table.GenericTableModel">
+								<constructor-arg><ref bean="messageFiltersTable" /></constructor-arg>
+								<property name="columns"><array>
+									<bean class="springclient.table.Column">
+										<property name="caption" value="Filter" />
+										<property name="type" value="java.lang.String" />
+										<property name="width" value="400" />
+									</bean>
+									<bean class="springclient.table.Column">
+										<property name="caption" value="Original Message" />
+										<property name="type" value="java.lang.String" />
+										<property name="width" value="400" />
+									</bean>
+								</array></property>
+							</bean></constructor-arg>
+							<property name="doubleClickAction" ref="editFilterAction" />
+						</bean>
+					</constructor-arg></bean></entry>
+					
+					<entry key="Agent Templates"><bean class="springclient.panel.Scroll"><constructor-arg>
+						<bean class="springclient.table.Table">
+							<constructor-arg><bean class="springclient.table.GenericTableModel">
+								<constructor-arg><ref bean="agentTemplateTable" /></constructor-arg>
+								<property name="columns"><array>
+									<bean class="springclient.table.Column">
+										<property name="caption" value="Agent Template" />
+										<property name="type" value="java.lang.String" />
+										<property name="width" value="300" />
+									</bean>
+								</array></property>
+							</bean></constructor-arg>
+							<property name="doubleClickAction" ref="editAgentTemplateAction" />
+						</bean>
+					</constructor-arg></bean></entry>
+				</map></property>
+			</bean></property>
+		</bean></property>
+	</bean>
+</beans>

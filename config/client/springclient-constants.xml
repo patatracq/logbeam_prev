@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * This file is part of log-beam.
+ * 
+ * log-beam is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * log-beam is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with log-beam.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beans
+		xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="COMP_LEFT" class="java.lang.Float"><constructor-arg value="0.0" /></bean>
+	<bean id="COMP_CENTER" class="java.lang.Float"><constructor-arg value="0.5" /></bean>
+	<bean id="COMP_RIGHT" class="java.lang.Float"><constructor-arg value="1.0" /></bean>
+	
+	<bean id="GRIDPANEL_LEFT" class="java.lang.Integer"><constructor-arg value="17" /></bean>
+	<bean id="GRIDPANEL_CENTER" class="java.lang.Integer"><constructor-arg value="10" /></bean>
+	<bean id="GRIDPANEL_RIGHT" class="java.lang.Integer"><constructor-arg value="13" /></bean>
+</beans>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * This file is part of log-beam.
+ * 
+ * log-beam is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * log-beam is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with log-beam.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beans
+		xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="logFileTemplateDetailDialog" class="springclient.Dialog">
+		<property name="title" value="Log File Template" />
+		<property name="resizable" value="false" />
+		<property name="mainPanel"><bean class="springclient.panel.XBoxPanel">
+			<property name="components"><list>
+				<bean class="springclient.panel.YBoxPanel">
+					<property name="components"><list>
+						<bean class="springclient.panel.Scroll">
+							<constructor-arg><bean class="springclient.text.TextField">
+								<constructor-arg value="30" />
+								<constructor-arg ref="logFileTemplateNameBinding" />
+							</bean></constructor-arg>
+						</bean>
+						
+						<bean class="springclient.panel.XBoxPanel">
+							<property name="components"><list>
+								<bean class="springclient.simple.Button">
+									<property name="caption" value="Cancel" />
+									<property name="action"><bean class="springclient.action.DialogClose">
+										<property name="dialog" ref="logFileTemplateDetailDialog" />
+									</bean></property>
+								</bean>
+								
+								<bean class="springclient.simple.DialogDefaultButton">
+									<property name="caption" value="OK" />
+									<property name="dialog" ref="logFileTemplateDetailDialog" />
+									<property name="action"><bean class="springclient.action.DialogOk">
+										<property name="dialog" ref="logFileTemplateDetailDialog" />
+										<property name="action" ref="addLogFileTemplateAction" />
+									</bean></property>
+								</bean>
+							</list></property>
+						</bean>
+					</list></property>
+				</bean>
+			</list></property>
+		</bean></property>
+	</bean>
+</beans>

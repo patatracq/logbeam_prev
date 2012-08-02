@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/spring-client" xmlns:tns="http://www.example.org/spring-client" elementFormDefault="qualified">
+
+    <element name="spring-client" type="tns:SpringClient"></element>
+    
+    <complexType name="SpringClient">
+    	<sequence>
+    		<element name="look-and-feel" type="tns:LookAndFeel" minOccurs="1" maxOccurs="1" />
+    	</sequence>
+    </complexType>
+    
+
+    <complexType name="LookAndFeel">
+    	<choice>
+    		<element name="system" />
+    	</choice>
+    </complexType>
+</schema>

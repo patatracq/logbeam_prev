@@ -1,0 +1,8 @@
+#!/usr/bin/sh
+
+APP_HOME=/domains/tdp050/logbeam
+JAVA_HOME=/usr/jdk/latest
+
+CLASSPATH=${APP_HOME}/config:${APP_HOME}/bin/logbeam-agent.jar:${APP_HOME}/lib/aopalliance-1.0.jar:${APP_HOME}/lib/asm-all-3.3.1.jar:${APP_HOME}/lib/cglib-2.2.2.jar:${APP_HOME}/lib/commons-collections-3.1.jar:${APP_HOME}/lib/commons-logging-1.1.1.jar:${APP_HOME}/lib/dom4j-1.6.1.jar:${APP_HOME}/lib/hibernate-commons-annotations-3.2.0.Final.jar:${APP_HOME}/lib/hibernate-core-3.6.7.Final.jar:${APP_HOME}/lib/hibernate-jpa-2.0-api-1.0.1.Final.jar:${APP_HOME}/lib/javassist-3.12.0.GA.jar:${APP_HOME}/lib/jta-1.1.jar:${APP_HOME}/lib/junit-4.8.2.jar:${APP_HOME}/lib/log4j-1.2.16.jar:${APP_HOME}/lib/mysql-connector-java-5.1.18.jar:${APP_HOME}/lib/org.springframework.aop-3.1.0.RELEASE.jar:${APP_HOME}/lib/org.springframework.asm-3.1.0.RELEASE.jar:${APP_HOME}/lib/org.springframework.beans-3.1.0.RELEASE.jar:${APP_HOME}/lib/org.springframework.context-3.1.0.RELEASE.jar:${APP_HOME}/lib/org.springframework.core-3.1.0.RELEASE.jar:${APP_HOME}/lib/org.springframework.expression-3.1.0.RELEASE.jar:${APP_HOME}/lib/org.springframework.jdbc-3.1.0.RELEASE.jar:${APP_HOME}/lib/org.springframework.orm-3.1.0.RELEASE.jar:${APP_HOME}/lib/org.springframework.oxm-3.1.0.RELEASE.jar:${APP_HOME}/lib/org.springframework.transaction-3.1.0.RELEASE.jar:${APP_HOME}/lib/slf4j-api-1.6.1.jar:${APP_HOME}/lib/slf4j-log4j12-1.6.1.jar:${APP_HOME}/lib/spring-integration-core-2.1.0.RELEASE.jar:${APP_HOME}/lib/spring-integration-event-2.1.0.RELEASE.jar:${APP_HOME}/lib/spring-integration-ip-2.1.0.RELEASE.jar
+
+${JAVA_HOME}/bin/java -Xmx512m -classpath ${CLASSPATH} -Dlog4j.configuration=log4j.properties logbeam.agent.LogBeamAgent agent-config.xml

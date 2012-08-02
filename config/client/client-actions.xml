@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * This file is part of log-beam.
+ * 
+ * log-beam is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * log-beam is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with log-beam.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beans
+		xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- Filter Actions -->
+	<bean id="deleteFilterAction" class="crudbeam.action.DeleteBinding">
+		<property name="binding" ref="logMessageFilterRegexBinding" />
+	</bean>
+	
+	<bean id="openAddFilterAction" class="crudbeam.action.ActionChain">
+		<property name="actions"><list>
+			<bean class="springclient.action.ResetBinding"><property name="binding" ref="logMessageFilterRegexBinding" /></bean>
+			<bean class="springclient.action.ResetBinding"><property name="binding" ref="logMessageFilterOriginalMessageBinding" /></bean>
+			<bean class="springclient.action.ResetBinding"><property name="binding" ref="logMessageFilterTestResultBinding" /></bean>
+
+			<bean class="springclient.action.CopyBindingValue">
+				<property name="from" ref="logMessageBinding" />
+				<property name="to" ref="logMessageFilterOriginalMessageBinding" />
+			</bean>
+
+			<bean class="logbeam.client.action.filter.LogMessageToFilter">
+				<property name="originalMessage" ref="logMessageFilterOriginalMessageBinding" />
+				<property name="regex" ref="logMessageFilterRegexBinding" />
+			</bean>
+			
+			<bean class="springclient.action.OpenDialog">
+				<property name="dialog" ref="addFilterDialog" />
+			</bean>
+		</list></property>
+	</bean>
+	
+	<bean id="editFilterAction" class="crudbeam.action.ActionChain">
+		<property name="actions"><list>
+			<bean class="springclient.action.ResetBinding"><property name="binding" ref="logMessageFilterRegexBinding" /></bean>
+			<bean class="springclient.action.ResetBinding"><property name="binding" ref="logMessageFilterOriginalMessageBinding" /></bean>
+			<bean class="springclient.action.ResetBinding"><property name="binding" ref="logMessageFilterTestResultBinding" /></bean>
+
+			<bean class="logbeam.client.action.filter.GetSelectedFilter">
+				<property name="regex" ref="logMessageFilterRegexBinding" />
+				<property name="originalMessage" ref="logMessageFilterOriginalMessageBinding" />
+				<property name="testResult" ref="logMessageFilterTestResultBinding" />
+			</bean>
+			
+			<bean class="springclient.action.OpenDialog">
+				<property name="dialog" ref="addFilterDialog" />
+			</bean>
+		</list></property>
+	</bean>
+	
+	<bean id="saveFilterAction" class="crudbeam.action.SaveBinding">
+		<property name="binding" ref="logMessageFilterRegexBinding" />
+	</bean>
+	
+	<bean id="testRegexAction" class="crudbeam.action.ActionChain">
+		<property name="actions"><list>
+			<bean class="springclient.action.DialogApply">
+				<property name="dialog" ref="addFilterDialog" />
+			</bean>
+			
+			<bean class="logbeam.client.action.regex.TestRegex">
+				<property name="regex" ref="logMessageFilterRegexBinding" />
+				<property name="originalMessage" ref="logMessageFilterOriginalMessageBinding" />
+				<property name="testResult" ref="logMessageFilterTestResultBinding" />
+			</bean>
+		</list></property>
+	</bean>
+	
+	<bean id="regexInsertAnyNumber" class="logbeam.client.action.regex.InsertAnyNumber">
+		<property name="regexTextArea" ref="regexTextArea" />
+	</bean>
+	
+	<bean id="regexInsertAnyNumbers" class="logbeam.client.action.regex.InsertAnyNumbers">
+		<property name="regexTextArea" ref="regexTextArea" />
+	</bean>
+	
+	<bean id="regexInsertAnyCharacters" class="logbeam.client.action.regex.InsertAnyCharacters">
+		<property name="regexTextArea" ref="regexTextArea" />
+	</bean>
+
+	<!-- Template Actions -->
+	<bean id="openAgentTemplateDialogAction" class="crudbeam.action.ActionChain">
+		<property name="actions"><list>
+			<bean class="springclient.action.ResetBinding"><property name="binding" ref="agentTemplateNameBinding" /></bean>
+			<bean class="springclient.action.ResetBinding"><property name="binding" ref="agentTemplateLogFilesBinding" /></bean>
+		 	<bean class="springclient.action.OpenDialog"><property name="dialog" ref="agentTemplateDetailDialog" /></bean>
+		</list></property>
+	</bean>
+	
+	<bean id="editAgentTemplateAction" class="crudbeam.action.ActionChain">
+		<property name="actions"><list>
+			<bean class="springclient.action.ResetBinding"><property name="binding" ref="agentTemplateNameBinding" /></bean>
+			<bean class="springclient.action.ResetBinding"><property name="binding" ref="agentTemplateLogFilesBinding" /></bean>
+
+			<bean class="logbeam.client.action.template.GetSelectedTemplate">
+				<property name="name" ref="agentTemplateNameBinding" />
+				<property name="logFiles" ref="agentTemplateLogFilesBinding" />
+			</bean>
+			
+		 	<bean class="springclient.action.OpenDialog"><property name="dialog" ref="agentTemplateDetailDialog" /></bean>
+		</list></property>
+	</bean>
+	
+	<bean id="openLogFileTemplateAction" class="crudbeam.action.ActionChain">
+		<property name="actions"><list>
+			<bean class="springclient.action.ResetBinding"><property name="binding" ref="logFileTemplateNameBinding" /></bean>
+			<bean class="springclient.action.OpenDialog"><property name="dialog" ref="logFileTemplateDetailDialog" /></bean>
+		</list></property>
+	</bean>
+	
+	<bean id="addLogFileTemplateAction" class="crudbeam.action.ActionChain">
+		<property name="actions"><list>
+			<bean class="logbeam.client.action.template.AddLogFileTemplate">
+				<property name="name" ref="logFileTemplateNameBinding" />
+				<property name="logFiles" ref="agentTemplateLogFilesBinding" />
+			</bean>
+		</list></property>
+	</bean>
+	
+	<bean id="saveAgentTemplateAction" class="crudbeam.action.SaveBinding">
+		<property name="binding" ref="agentTemplateNameBinding" />
+	</bean>
+
+	<bean id="deleteAgentTemplateAction" class="crudbeam.action.DeleteBinding">
+		<property name="binding" ref="agentTemplateNameBinding" />
+	</bean>
+	
+	<!-- bean id="chooseTemplateAction" class="springclient.action.OpenDialog">
+		<property name="dialog" ref="selectAgentTemplateDialog" />
+	</bean-->
+	
+	<!-- Agent Actions -->
+	<bean id="newAgentAction" class="crudbeam.action.ActionChain">
+		<property name="actions"><list>
+			<bean class="springclient.action.ResetBinding"><property name="binding" ref="agentNameBinding" /></bean>
+			<bean class="springclient.action.ResetBinding"><property name="binding" ref="agentLogFilesBinding" /></bean>
+			<bean class="springclient.action.OpenDialog"><property name="dialog" ref="agentDetailDialog" /></bean>
+		</list></property>
+	</bean>
+	
+	<bean id="editAgentAction" class="crudbeam.action.ActionChain">
+		<property name="actions"><list>
+			<bean class="springclient.action.ResetBinding"><property name="binding" ref="agentNameBinding" /></bean>
+			<bean class="springclient.action.ResetBinding"><property name="binding" ref="agentLogFilesBinding" /></bean>
+			
+			<bean class="logbeam.client.action.agent.GetSelectedAgent">
+				<property name="name" ref="agentNameBinding" />
+				<property name="logFiles" ref="agentLogFilesBinding" />
+			</bean>
+		 	<bean class="springclient.action.OpenDialog"><property name="dialog" ref="agentDetailDialog" /></bean>
+		</list></property>
+	</bean>
+	
+	<!-- Message Actions -->
+	<bean id="clearClientCacheAction" class="logbeam.client.action.messages.ClearClientCache">
+		<property name="logMessagesTable" ref="logMessagesTable" />
+	</bean>
+	
+	<bean id="getLogMessagesNewerThanAction" class="logbeam.client.action.messages.GetLogMessagesNewerThan">
+		<property name="binding" ref="logMessageMillisBinding" />
+		<property name="logMessagesTable" ref="logMessagesTable" />
+		<property name="logMessageContainer" ref="logMessageCyberspaceContainer" />
+	</bean>
+	
+	<bean id="getNewerThanAction" class="springclient.action.OpenDialog">
+		<property name="dialog" ref="getNewerThanDialog" />
+	</bean>
+	
+	<bean id="openLogMessageDetailAction" class="crudbeam.action.ActionChain">
+		<property name="actions"><list>
+			<bean class="springclient.action.ResetBinding"><property name="binding" ref="agentNameBinding" /></bean>
+			<bean class="springclient.action.ResetBinding"><property name="binding" ref="logFilenameBinding" /></bean>
+			<bean class="springclient.action.ResetBinding"><property name="binding" ref="logMessageBinding" /></bean>
+
+			<bean class="logbeam.client.action.messages.GetSelectedLogMessage">
+				<property name="logMessagesTable" ref="logMessagesTable" />
+				<property name="agentName" ref="agentNameBinding" />
+				<property name="logFilename" ref="logFilenameBinding" />
+				<property name="logMessage" ref="logMessageBinding" />
+			</bean>
+			
+			<bean class="springclient.action.OpenDialog">
+				<property name="dialog" ref="logMessageDetailDialog" />
+			</bean>
+		</list></property>
+	</bean>
+	
+	<bean id="pauseMessagesAction" class="logbeam.client.action.messages.PauseMessages">
+		<property name="logMessagesTable" ref="logMessagesTable" />
+	</bean>
+	
+	<bean id="selectAgentsAction" class="logbeam.client.action.agent.SelectAgents">
+		<property name="logMessagesTable" ref="logMessagesTable" />
+	</bean>
+</beans>

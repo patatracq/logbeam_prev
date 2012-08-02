@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * This file is part of log-beam.
+ * 
+ * log-beam is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * log-beam is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with log-beam.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beans
+		xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="agentNameBinding" class="logbeam.client.bind.agent.AgentName">
+		<property name="container" ref="agentCyberspaceContainer" />
+	</bean>
+	
+	<bean id="agentLogFilesBinding" class="logbeam.client.bind.agent.AgentLogFiles">
+		<property name="container" ref="agentCyberspaceContainer" />
+	</bean>
+	
+	<bean id="agentTemplateNameBinding" class="logbeam.client.bind.agenttemplate.AgentTemplateName">
+		<property name="container" ref="agentTemplateCyberspaceContainer" />
+	</bean>
+	
+	<bean id="agentTemplateLogFilesBinding" class="logbeam.client.bind.agenttemplate.AgentTemplateLogFiles">
+		<property name="container" ref="agentTemplateCyberspaceContainer" />
+	</bean>
+	
+	<bean id="logFilenameBinding" class="logbeam.client.bind.logfile.LogFilename" />
+	
+	<bean id="logFileTemplateNameBinding" class="crudbeam.bind.StringBinding" />
+	
+	<bean id="logMessageBinding" class="logbeam.client.bind.logmessage.LogMessage" />
+
+	<bean id="logMessageMillisBinding" class="logbeam.client.bind.logmessage.LogMessageMillis" />
+	
+	<bean id="logMessageFilterRegexBinding" class="logbeam.client.bind.logmessagefilter.LogMessageFilterRegex">
+		<property name="container" ref="logMessageFilterCyberspaceContainer" />
+	</bean>
+	
+	<bean id="logMessageFilterOriginalMessageBinding" class="logbeam.client.bind.logmessagefilter.LogMessageFilterOriginalMessage">
+		<property name="container" ref="logMessageFilterCyberspaceContainer" />
+	</bean>
+	
+	<bean id="logMessageFilterTestResultBinding" class="logbeam.client.bind.logmessagefilter.LogMessageFilterTestResult">
+		<property name="container" ref="logMessageFilterCyberspaceContainer" />
+	</bean>
+</beans>

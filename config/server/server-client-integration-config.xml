@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * This file is part of log-beam.
+ * 
+ * log-beam is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * log-beam is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with log-beam.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beans
+		xmlns="http://www.springframework.org/schema/beans"
+		xmlns:si="http://www.springframework.org/schema/integration"
+		xmlns:ip="http://www.springframework.org/schema/integration/ip"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/integration
+			http://www.springframework.org/schema/integration/spring-integration.xsd
+			http://www.springframework.org/schema/integration/ip
+			http://www.springframework.org/schema/integration/ip/spring-integration-ip.xsd">
+
+	<import resource="integration-config.xml" />
+
+	<si:channel id="clientEventChannel">
+		<si:queue capacity="64" />
+	</si:channel>
+	<si:channel id="ipClientServiceReplyChannel" />
+	
+	<ip:tcp-connection-factory id="clientConnectionFactory"
+			type="server"
+			port="16101"
+			single-use="true"
+			serializer="serializer" />
+			
+	<bean id="clientTcpPublisher" class="integration.tcp.TcpPublisher">
+		<constructor-arg value="16102" />
+	</bean>
+	
+	<bean class="crudbeam.event.ChannelPublisher">
+		<property name="channel" ref="clientEventChannel" />
+	</bean>
+	
+	<si:chain id="transformClientEvent"
+			 input-channel="clientEventChannel">
+		<si:poller fixed-rate="1000" />
+		<si:transformer><bean class="integration.transformers.JonasMarshallingTransformer">
+			<property name="formattedOutput" value="false" />
+		</bean></si:transformer>
+		<si:transformer><bean class="integration.transformers.Message2IpTransformer" /></si:transformer>
+		<si:service-activator ref="clientTcpPublisher" />
+	</si:chain>	
+	
+	<ip:tcp-inbound-gateway
+			request-channel="ipClientServiceRequestChannel"
+			reply-channel="ipClientServiceReplyChannel"
+			connection-factory="clientConnectionFactory" />
+
+	<si:chain id="transformClientRequest"
+			input-channel="ipClientServiceRequestChannel"
+			output-channel="clientServiceRequestChannel">
+		<si:transformer><bean class="integration.transformers.Ip2MessageTransformer" /></si:transformer>
+		<si:transformer><bean class="integration.transformers.JonasUnmarshallingTransformer" /></si:transformer>
+	</si:chain>
+
+	<si:chain id="transformClientReply"
+			input-channel="clientServiceReplyChannel"
+			output-channel="ipClientServiceReplyChannel">
+		<si:transformer><bean class="integration.transformers.JonasMarshallingTransformer">
+			<property name="formattedOutput" value="false" />
+		</bean></si:transformer>
+		<si:transformer><bean class="integration.transformers.Message2IpTransformer" /></si:transformer>
+	</si:chain>
+
+	<bean id="clientIntegrationServer" class="integration.IntegrationServer" />
+		
+	<si:service-activator
+			input-channel="clientServiceRequestChannel"
+			output-channel="clientServiceReplyChannel"
+			ref="clientIntegrationServer" />
+</beans>
+			

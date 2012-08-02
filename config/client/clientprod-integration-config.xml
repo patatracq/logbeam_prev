@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * This file is part of log-beam.
+ * 
+ * log-beam is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * log-beam is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with log-beam.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beans
+		xmlns="http://www.springframework.org/schema/beans"
+		xmlns:si="http://www.springframework.org/schema/integration"
+		xmlns:ip="http://www.springframework.org/schema/integration/ip"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/integration
+			http://www.springframework.org/schema/integration/spring-integration-2.1.xsd
+			http://www.springframework.org/schema/integration/ip
+			http://www.springframework.org/schema/integration/ip/spring-integration-ip-2.1.xsd">
+
+	<import resource="integration-config.xml" />
+
+	<si:channel id="requestChannel" />	
+	<si:channel id="replyChannel">
+		<si:queue/>
+	</si:channel>
+	
+	<bean id="clientIntegrationClient" class="integration.IntegrationClient">
+		<property name="timeout" value="60" />
+		<property name="requestChannel" ref="requestChannel" />
+		<property name="replyChannel" ref="replyChannel" />
+	</bean>
+
+	<!-- Containers -->
+	<bean id="agentCyberspaceContainer" class="logbeam.business.agent.AgentCyberspaceContainer">
+		<property name="client" ref="clientIntegrationClient" />
+		<property name="databaseContainerId" value="agentDatabaseContainer" />
+	</bean>
+	
+	<bean id="agentTemplateCyberspaceContainer" class="logbeam.business.agenttemplate.AgentTemplateCyberspaceContainer">
+		<property name="client" ref="clientIntegrationClient" />
+		<property name="databaseContainerId" value="agentTemplateDatabaseContainer" />
+	</bean>
+	
+	<bean id="logMessageCyberspaceContainer" class="logbeam.business.logmessage.LogMessageCyberspaceContainer">
+		<property name="client" ref="clientIntegrationClient" />
+		<property name="databaseContainerId" value="logMessageDatabaseContainer" />
+	</bean>
+	
+	<bean id="logMessageFilterCyberspaceContainer" class="logbeam.business.logmessagefilter.LogMessageFilterCyberspaceContainer">
+		<property name="client" ref="clientIntegrationClient" />
+		<property name="databaseContainerId" value="logMessageFilterDatabaseContainer" />
+	</bean>
+	
+	<!-- Service connection and transformation -->
+	<ip:tcp-connection-factory id="serviceConnectionFactory"
+			type="client"
+			host="sadbprodfkwiki1.sfa.se"
+			port="16101"
+			single-use="true"
+			so-timeout="10000"
+			deserializer="serializer" />
+			
+	<ip:tcp-outbound-gateway
+			request-channel="ipRequestChannel"
+			reply-channel="ipReplyChannel"
+			connection-factory="serviceConnectionFactory" />
+	
+	<si:chain id="transformRequest"
+			input-channel="requestChannel"
+			output-channel="ipRequestChannel">
+		<si:transformer>
+			<bean class="integration.transformers.JonasMarshallingTransformer">
+				<property name="formattedOutput" value="false" />
+			</bean>
+		</si:transformer>
+		<si:transformer><bean class="integration.transformers.Message2IpTransformer" /></si:transformer>
+	</si:chain>
+
+	<si:chain id="transformReply"
+			input-channel="ipReplyChannel"
+			output-channel="replyChannel">
+		<si:transformer><bean class="integration.transformers.Ip2MessageTransformer" /></si:transformer>
+		<si:transformer><bean class="integration.transformers.JonasUnmarshallingTransformer" /></si:transformer>
+	</si:chain>
+
+	<!-- Event subscription connection and transformation -->
+	<ip:tcp-connection-factory id="eventConnectionFactory"
+			type="client"
+			host="sadbprodfkwiki1.sfa.se"
+			port="16102"
+			single-use="false" />
+			
+	<ip:tcp-inbound-channel-adapter id="eventAdapter"
+			channel="ipEventChannel"
+			connection-factory="eventConnectionFactory"
+			client-mode="true" />
+			
+	<si:chain
+			input-channel="ipEventChannel">
+		<si:transformer><bean class="integration.transformers.Ip2MessageTransformer" /></si:transformer>
+		<si:transformer><bean class="integration.transformers.JonasUnmarshallingTransformer" /></si:transformer>
+		<si:service-activator><bean class="crudbeam.event.ChannelToLocalEvent" /></si:service-activator>	
+	</si:chain>
+</beans>

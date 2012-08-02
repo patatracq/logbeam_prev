@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * This file is part of log-beam.
+ * 
+ * log-beam is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * log-beam is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with log-beam.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beans
+		xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<import resource="agent-integration-config.xml" />
+	
+	<bean class="logbeam.agent.LogBeamAgent">
+		<property name="agentName" ref="agentName" />
+		<property name="keepAlive" ref="keepAlive" />
+		<property name="logCheckInterval" ref="logCheckInterval" />
+		<property name="agentContainer" ref="agentCyberspaceContainer" />
+	</bean>
+
+	<!-- Global Constants -->
+	<bean id="logCheckInterval" class="java.lang.Long" >
+		<constructor-arg value="5" />
+	</bean>
+	
+	<bean id="keepAliveInterval" class="java.lang.Short">
+		<constructor-arg value="290" />
+	</bean>
+
+	<!-- Keep-alive sender -->
+	<bean id="keepAlive" class="logbeam.agent.LogBeamAgentKeepAlive">
+		<property name="intervalSeconds" ref="keepAliveInterval" />
+		<property name="agentContainer" ref="agentCyberspaceContainer" />
+	</bean>
+	
+	<!-- LogListener template -->
+	<bean class="logbeam.agent.LogListener" scope="prototype">
+		<property name="logFileContainer" ref="logFileCyberspaceContainer" />
+		<property name="logMessageContainer" ref="logMessageCyberspaceContainer" />
+	</bean>
+
+	<!-- Containers -->
+	<bean id="agentCyberspaceContainer" class="logbeam.business.agent.AgentCyberspaceContainer">
+		<property name="client" ref="agentIntegrationClient" />
+		<property name="databaseContainerId" value="agentDatabaseContainer" />
+	</bean>
+
+	<bean id="logFileCyberspaceContainer" class="logbeam.business.logfile.LogFileCyberspaceContainer">
+		<property name="client" ref="agentIntegrationClient" />
+		<property name="databaseContainerId" value="logFileDatabaseContainer" />
+	</bean>
+
+	<bean id="logMessageCyberspaceContainer" class="logbeam.business.logmessage.LogMessageCyberspaceContainer">
+		<property name="client" ref="agentIntegrationClient" />
+		<property name="databaseContainerId" value="logMessageDatabaseContainer" />
+	</bean>	
+</beans>

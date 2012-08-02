@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<!--
+ * This file is part of log-beam.
+ *
+ * log-beam is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * log-beam is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with log-beam.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<project name="logbeam" default="distribute"
+		xmlns:ivy="antlib:org.apache.ivy.ant">
+	
+	<!-- Main properties -->
+	<property name="logbeam.version" value="0.7" />
+	
+	<!-- Directories -->
+	<property name="dir.bin" value="bin" />
+	<property name="dir.config" value="config" />
+	<property name="dir.lib" value="lib" />
+	<property name="dir.src" value="src" />
+	
+	<property name="dir.build" value="build" />
+	<property name="dir.build.classes" value="${dir.build}/classes" />
+	<property name="dir.build.jars" value="${dir.build}/jars" />
+	
+	<property name="dir.zip" value="dist/logbeam-${logbeam.version}.zip" />
+	<property name="client.zip" value="dist/logbeamclient-${logbeam.version}.zip" />
+	
+	<!-- Classpath -->
+	<path id="classpath.common">
+		<fileset dir="${dir.lib}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+	
+	<!-- Clean -->
+	<target name="clean" description=
+			"Removes all generated files and/or directories">
+		
+		<delete dir="${dir.build}" />
+	</target>
+	
+	<!-- Compile -->
+	<target name="compile">
+		<mkdir dir="${dir.build.classes}" />
+		
+		<javac srcdir="${dir.src}" destdir="${dir.build.classes}"
+				includeantruntime="false"
+				encoding="ISO-8859-1">
+			<classpath refid="classpath.common" />
+		</javac>
+
+		<mkdir dir="${dir.build.jars}" />
+		
+		<jar jarfile="${dir.build.jars}/logbeam-server.jar" basedir="${dir.build.classes}">
+			<include name="crudbeam/**"/>
+			<include name="integration/**"/>
+			<include name="jonas/**"/>
+			<include name="logbeam/*.class"/>
+			<include name="logbeam/business/**"/>
+			<include name="logbeam/server/**"/>
+			<include name="util/**"/>
+		</jar>
+		
+		<jar jarfile="${dir.build.jars}/logbeam-agent.jar" basedir="${dir.build.classes}">
+			<include name="crudbeam/**"/>
+			<include name="integration/**"/>
+			<include name="jonas/**"/>
+			<include name="logbeam/*.class"/>
+			<include name="logbeam/business/**"/>
+			<include name="logbeam/agent/**"/>
+			<include name="util/**"/>
+		</jar>
+
+		<jar jarfile="${dir.build.jars}/logbeam-client.jar" basedir="${dir.build.classes}" manifest="META-INF/MANIFEST.MF">
+			<include name="crudbeam/**"/>
+			<include name="integration/**"/>
+			<include name="jonas/**"/>
+			<include name="logbeam/*.class"/>
+			<include name="logbeam/business/**"/>
+			<include name="logbeam/client/**"/>
+			<include name="springclient/**"/>
+			<include name="util/**"/>
+		</jar>
+	</target>
+	
+	<!-- Distribute -->
+	<target name="distribute" depends="compile">
+		<delete file="${dir.zip}" />
+		<delete file="${client.zip}" />
+		
+		<zip destfile="${client.zip}">
+
+			<zipfileset dir="${dir.config}" prefix="logbeam-${logbeam.version}/config">
+				<include name="client-*" />
+				<include name="spring*" />
+				<include name="log4j*" />
+			</zipfileset>
+			
+			<zipfileset dir="${dir.build.jars}" prefix="logbeam-${logbeam.version}/bin">
+				<include name="logbeam-client.jar" />
+			</zipfileset>
+
+			<zipfileset dir="${dir.lib}" prefix="logbeam-${logbeam.version}/lib">
+				<include name="*.jar" />
+			</zipfileset>
+		</zip>
+		
+		<zip destfile="${dir.zip}">
+			<zipfileset dir="${dir.config}" prefix="logbeam-${logbeam.version}/config">
+				<exclude name="agent2*" />
+			</zipfileset>
+			
+			<zipfileset dir="${dir.lib}" prefix="logbeam-${logbeam.version}/lib">
+				<include name="*.jar" />
+			</zipfileset>
+
+			<zipfileset dir="${dir.build.jars}" prefix="logbeam-${logbeam.version}/bin">
+				<include name="*.jar" />
+			</zipfileset>
+			
+			<zipfileset dir="${dir.bin}" prefix="logbeam-${logbeam.version}/bin">
+				<include name="*" />
+			</zipfileset>
+		</zip>
+	</target>
+</project>

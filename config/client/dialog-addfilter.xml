@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * This file is part of log-beam.
+ * 
+ * log-beam is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * log-beam is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with log-beam.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beans
+		xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- Referenced widgets -->
+	<bean id="regexTextArea" class="springclient.text.TextArea">
+		<constructor-arg value="10" />
+		<constructor-arg value="40" />
+		<constructor-arg ref="logMessageFilterRegexBinding" />
+		<property name="focusEventFactory" ref="regexFocusEventFactory" />
+		<property name="unfocusEventFactory" ref="regexUnfocusEventFactory" />
+	</bean>
+
+	<bean id="addFilterDialog" class="springclient.Dialog">
+		<property name="title" value="Add Filter" />
+		<property name="resizable" value="false" />
+		
+		<property name="mainPanel"><bean class="springclient.panel.GridPanel">
+			<property name="items"><list>
+				<bean class="springclient.panel.GridPanelItem">
+					<property name="row" value="0" />
+					<property name="align" ref="GRIDPANEL_LEFT" />
+					<property name="component"><bean class="springclient.text.Label">
+						<property name="caption" value="Log Message:" />
+					</bean></property>
+				</bean>
+				
+				<bean class="springclient.panel.GridPanelItem">
+					<property name="row" value="1" />
+					<property name="align" ref="GRIDPANEL_LEFT" />
+					<property name="component"><bean class="springclient.panel.Scroll"><constructor-arg>
+						<bean class="springclient.text.TextArea">
+							<constructor-arg value="10" />
+							<constructor-arg value="40" />
+							<constructor-arg ref="logMessageFilterOriginalMessageBinding" />
+						</bean>
+					</constructor-arg></bean></property>
+				</bean>
+
+				<bean class="springclient.panel.GridPanelItem">
+					<property name="row" value="2" />
+					<property name="align" ref="GRIDPANEL_LEFT" />
+					<property name="component"><bean class="springclient.text.Label">
+						<property name="caption" value="Regular Expression:" />
+					</bean></property>
+				</bean>
+				
+				<bean class="springclient.panel.GridPanelItem">
+					<property name="row" value="3" />
+					<property name="align" ref="GRIDPANEL_LEFT" />
+					<property name="component"><bean class="springclient.panel.Scroll"><constructor-arg>
+						<ref bean="regexTextArea" />
+					</constructor-arg></bean></property>
+				</bean>
+				
+				<bean class="springclient.panel.GridPanelItem">
+					<property name="row" value="4" />
+					<property name="column" value="0" />
+					<property name="align" ref="GRIDPANEL_LEFT" />
+					<property name="component"><bean class="springclient.panel.YBoxPanel">
+						<property name="resizable" value="false" />
+						<property name="border"><bean class="javax.swing.border.TitledBorder">
+							<constructor-arg value="Test"/>
+						</bean></property>
+						<property name="components"><list>
+							<bean class="springclient.text.Label">
+								<constructor-arg ref="logMessageFilterTestResultBinding" />
+							</bean>
+	
+							<bean class="springclient.simple.Button">
+								<property name="caption" value="Test" />
+								<property name="action" ref="testRegexAction" />
+							</bean>
+						</list></property>
+					</bean></property>
+				</bean>
+
+				<bean class="springclient.panel.GridPanelItem">
+					<property name="row" value="4" />
+					<property name="column" value="1" />
+					<property name="align" ref="GRIDPANEL_LEFT" />
+					<property name="component"><bean class="springclient.panel.YBoxPanel">
+						<property name="resizable" value="false" />
+						<property name="alignX" ref="COMP_LEFT" />
+						<property name="border"><bean class="javax.swing.border.TitledBorder">
+							<constructor-arg value="Regex Shortcuts"/>
+						</bean></property>
+						<property name="components"><list>
+							<bean class="springclient.panel.XBoxPanel">
+								<property name="components"><list>
+									<bean class="springclient.simple.Button">
+										<property name="caption" value="[0-9]*" />
+										<property name="enabled" value="true" />
+										<property name="action" ref="regexInsertAnyNumbers" />
+									</bean>
+								</list></property>
+							</bean>
+							
+							<bean class="springclient.panel.XBoxPanel">
+								<property name="components"><list>
+									<bean class="springclient.simple.Button">
+										<property name="caption" value="(.*)" />
+										<property name="enabled" value="true" />
+										<property name="action" ref="regexInsertAnyCharacters" />
+									</bean>
+								</list></property>
+							</bean>
+	
+							<bean class="springclient.panel.XBoxPanel">
+								<property name="components"><list>
+									<bean class="springclient.simple.Button">
+										<property name="caption" value="[0-9]" />
+										<property name="enabled" value="true" />
+										<property name="action" ref="regexInsertAnyNumber" />
+									</bean>
+								</list></property>
+							</bean>
+						</list></property>
+					</bean></property>
+				</bean>
+
+				<bean class="springclient.panel.GridPanelItem">
+					<property name="row" value="5" />
+					<property name="align" ref="GRIDPANEL_RIGHT" />
+					<property name="component"><bean class="springclient.panel.XBoxPanel">
+						<property name="components"><list>
+							<bean class="springclient.simple.Button">
+								<property name="caption" value="Cancel" />
+								<property name="action">
+									<bean class="springclient.action.DialogCancel">
+										<property name="dialog" ref="addFilterDialog" />
+									</bean>
+								</property>
+							</bean>
+							<bean class="springclient.simple.Button">
+								<property name="caption" value="Delete" />
+								<property name="action">
+									<bean class="springclient.action.DialogClose">
+										<property name="dialog" ref="addFilterDialog" />
+										<property name="action" ref="deleteFilterAction" />
+									</bean>
+								</property>
+							</bean>
+							<bean class="springclient.simple.DialogDefaultButton">
+								<property name="caption" value="Save" />
+								<property name="dialog" ref="addFilterDialog" />
+								<property name="action">
+									<bean class="springclient.action.DialogOk">
+										<property name="dialog" ref="addFilterDialog" />
+										<property name="action" ref="saveFilterAction" />
+									</bean>
+								</property>
+							</bean>
+						</list></property>
+					</bean></property>
+				</bean>
+			</list></property>
+		</bean></property>
+	</bean>
+</beans>

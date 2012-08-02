@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * This file is part of log-beam.
+ * 
+ * log-beam is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * log-beam is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with log-beam.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beans
+		xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://sadbprodfkwiki1.ads.sfa.se:3307/logbeam" />
+		<property name="username" value="logbeam" />
+		<property name="password" value="logbeam" />
+	</bean>
+	
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		
+		<property name="annotatedClasses">
+			<list>
+				<value>logbeam.business.Agent</value>
+				<value>logbeam.business.AgentTemplate</value>
+				<value>logbeam.business.LogFile</value>
+				<value>logbeam.business.LogFileTemplate</value>
+				<value>logbeam.business.LogMessage</value>
+				<value>logbeam.business.LogMessageFilter</value>
+			</list>
+		</property>
+
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="cache.provider_class">org.hibernate.cache.OSCacheProvider</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="agentDatabaseContainer" class="logbeam.business.agent.AgentDatabaseContainer">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="agentTemplateDatabaseContainer" class="logbeam.business.agenttemplate.AgentTemplateDatabaseContainer">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="logFileDatabaseContainer" class="logbeam.business.logfile.LogFileDatabaseContainer">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>	
+
+	<!-- bean id="logFileTemplateDatabaseContainer" class="logbeam.business.logfiletemplate.LogFileTemplateDatabaseContainer">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean-->	
+
+	<bean id="logMessageDatabaseContainer" class="logbeam.business.logmessage.LogMessageDatabaseContainer">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="filter"><bean class="logbeam.server.MessageFilter">
+			<property name="container" ref="logMessageFilterDatabaseContainer" />
+		</bean></property>
+	</bean>	
+
+	<bean id="logMessageFilterDatabaseContainer" class="logbeam.business.logmessagefilter.LogMessageFilterDatabaseContainer">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>	
+</beans>
