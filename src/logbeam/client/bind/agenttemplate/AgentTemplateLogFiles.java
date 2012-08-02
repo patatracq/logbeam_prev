@@ -6,7 +6,6 @@ import java.util.List;
 import logbeam.business.AgentTemplate;
 import logbeam.business.LogFileTemplate;
 import logbeam.business.agenttemplate.AgentTemplateContainer;
-import logbeam.business.logfiletemplate.LogFileTemplateContainer;
 
 import org.springframework.beans.factory.annotation.Required;
 
@@ -17,7 +16,7 @@ public class AgentTemplateLogFiles extends PropertyBinding< List< LogFileTemplat
 
 	private AgentTemplate agentTemplate;
 	private AgentTemplateContainer container;
-	private LogFileTemplateContainer logFileTemplateContainer;
+//	private LogFileTemplateContainer logFileTemplateContainer;
 
 	@Override
 	public void reset() {
@@ -83,9 +82,9 @@ public class AgentTemplateLogFiles extends PropertyBinding< List< LogFileTemplat
 		this.container = container;
 	}
 	
-	@Required
+/*	@Required
 	public void setLogFileTemplateContainer( LogFileTemplateContainer logFileTemplateContainer ) {
 		
 		this.logFileTemplateContainer = logFileTemplateContainer;
-	}
+	}*/
 }

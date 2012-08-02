@@ -14,12 +14,8 @@ public class InsertAnyNumber extends Action {
 	
 	@Override
 	protected void executeAction( Object source ) {
-		
-		StringBuffer regex = new StringBuffer( regexTextArea.getText() );
-		int offset = regexTextArea.toSwing().getCaretPosition();
-		regex.insert( offset, REGEX_ANY_NUMBER );
-		regexTextArea.setText( regex.toString() );
-		regexTextArea.toSwing().setCaretPosition( offset + REGEX_ANY_NUMBER.length() );
+
+		regexTextArea.toSwing().replaceSelection( REGEX_ANY_NUMBER );
 		regexTextArea.toSwing().grabFocus();
 	}
 

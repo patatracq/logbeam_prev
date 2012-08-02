@@ -12,8 +12,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
-import org.apache.log4j.Logger;
-
 import jonas.JonasUnmarshalListener;
 import jonas.annotations.JonasElement;
 import jonas.annotations.JonasExcludeIfAncestor;
@@ -22,8 +20,6 @@ import crudbeam.business.BusinessPojo;
 @Entity
 public class Agent extends BusinessPojo implements JonasUnmarshalListener {
 
-	private static Logger logger = Logger.getLogger( Agent.class );
-	
 	private String name;
 	private List< LogFile > logFiles = new ArrayList< LogFile >();
 	private Boolean status;

@@ -15,11 +15,7 @@ public class InsertAnyCharacters extends Action {
 	@Override
 	protected void executeAction( Object source ) {
 		
-		StringBuffer regex = new StringBuffer( regexTextArea.getText() );
-		int offset = regexTextArea.toSwing().getCaretPosition();
-		regex.insert( offset, REGEX_ANY_CHARACTERS );
-		regexTextArea.setText( regex.toString() );
-		regexTextArea.toSwing().setCaretPosition( offset + REGEX_ANY_CHARACTERS.length() );
+		regexTextArea.toSwing().replaceSelection( REGEX_ANY_CHARACTERS );
 		regexTextArea.toSwing().grabFocus();
 	}
 
