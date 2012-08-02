@@ -65,6 +65,9 @@
 							<property name="align" ref="GRIDPANEL_LEFT" />
 							<property name="row" value="3" />
 							<property name="component"><bean class="springclient.list.List">
+								<constructor-arg><bean class="springclient.GoldenRatioDimension">
+									<property name="width" value="207" />
+								</bean></constructor-arg>
 								<constructor-arg><bean class="springclient.list.GenericListModel">
 									<constructor-arg><ref bean="agentLogFileList" /></constructor-arg>
 								</bean></constructor-arg>

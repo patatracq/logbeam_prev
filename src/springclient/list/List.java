@@ -1,13 +1,13 @@
 package springclient.list;
 
+import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JList;
 
-import crudbeam.action.Action;
-
 import springclient.DefaultSwingComponent;
+import crudbeam.action.Action;
 
 
 public class List extends DefaultSwingComponent< List, JList > implements MouseListener {
@@ -15,10 +15,11 @@ public class List extends DefaultSwingComponent< List, JList > implements MouseL
 	private GenericListModel listModel;
 	private Action doubleClickAction;
 	
-	public List( GenericListModel listData ) {
+	public List( Dimension preferredSize, GenericListModel listData ) {
 		
 		super( new JList() );
-		
+
+		toSwing().setPreferredSize( preferredSize );
 		listModel = listData;
 		
 		toSwing().setModel( listModel );

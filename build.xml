@@ -81,7 +81,7 @@
 			<include name="util/**"/>
 		</jar>
 
-		<jar jarfile="${dir.build.jars}/logbeam-client.jar" basedir="${dir.build.classes}" manifest="META-INF/MANIFEST.MF">
+		<jar jarfile="${dir.build.jars}/logbeam-client.jar" basedir="${dir.build.classes}">
 			<include name="crudbeam/**"/>
 			<include name="integration/**"/>
 			<include name="jonas/**"/>
