@@ -20,6 +20,8 @@ public class List extends DefaultSwingComponent< List, JList > implements MouseL
 		
 		super( new JList() );
 
+		toSwing().setMinimumSize( preferredSize );
+		toSwing().setMaximumSize( preferredSize );
 		toSwing().setPreferredSize( preferredSize );
 		toSwing().setBorder( BasicBorders.getTextFieldBorder() );
 		listModel = listData;

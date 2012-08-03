@@ -33,6 +33,7 @@
 	<import resource="client-events.xml" />
 
 	<import resource="dialog-addfilter.xml" />
+	<import resource="dialog-addlogfile.xml" />
 	<import resource="dialog-agentdetail.xml" />
 	<import resource="dialog-getnewerthan.xml" />
 	<import resource="dialog-logmessagedetail.xml" />

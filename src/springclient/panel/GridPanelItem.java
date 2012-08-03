@@ -1,5 +1,7 @@
 package springclient.panel;
 
+import org.springframework.beans.factory.annotation.Required;
+
 import springclient.SwingComponent;
 
 public class GridPanelItem {
@@ -7,6 +9,7 @@ public class GridPanelItem {
 	private Integer row;
 	private Integer column;
 	private Integer align = GridPanel.LEFT;
+	private Boolean actualSize = false;
 	private SwingComponent< ?, ? > component;
 	
 	public Integer getRow() {
@@ -14,6 +17,7 @@ public class GridPanelItem {
 		return row;
 	}
 	
+	@Required
 	public void setRow( Integer row ) {
 	
 		this.row = row;
@@ -39,11 +43,22 @@ public class GridPanelItem {
 		this.align = align;
 	}
 	
+	public Boolean getActualSize() {
+		
+		return actualSize;
+	}
+	
+	public void setActualSize( Boolean actualSize ) {
+		
+		this.actualSize = actualSize;
+	}
+	
 	public SwingComponent< ?, ? > getComponent() {
 	
 		return component;
 	}
 	
+	@Required
 	public void setComponent( SwingComponent< ?, ? > component ) {
 	
 		this.component = component;

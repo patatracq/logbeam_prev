@@ -120,6 +120,15 @@
 		</list></property>
 	</bean>
 	
+	<!-- Log File Actions -->
+	<bean id="addLogFile" class="crudbeam.action.ActionChain">
+		<property name="actions"><list>
+			<bean class="springclient.action.ResetBinding"><property name="binding" ref="logFilenameBinding" /></bean>
+			
+			<bean class="springclient.action.OpenDialog"><property name="dialog" ref="addLogFileDialog" /></bean>
+		</list></property>
+	</bean>
+	
 	<!-- Message Actions -->
 	<bean id="clearClientCacheAction" class="logbeam.client.action.messages.ClearClientCache">
 		<property name="logMessagesTable" ref="logMessagesTable" />

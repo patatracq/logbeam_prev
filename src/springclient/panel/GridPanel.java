@@ -10,7 +10,6 @@ import javax.swing.JPanel;
 
 import springclient.BoundComponent;
 import springclient.SwingComponent;
-import springclient.UiException;
 
 
 
@@ -58,14 +57,10 @@ public class GridPanel extends DefaultPanel< GridPanel > implements Panel< GridP
 		Iterator< GridPanelItem > iterator = this.items.iterator();
 		while ( iterator.hasNext() ) {
 			GridPanelItem item = iterator.next();
-			if ( item.getRow() == null ) {
-				throw new UiException( "GridPanelItem.row is mandatory. Please specify property in bean configuration." );
-			} else if ( item.getComponent() == null ) {
-				throw new UiException( "GridPanelItem.component is mandatory. Please specify property in bean configuration." );
-			} else if ( item.getColumn() == null ) {
-				this.add( item.getRow(), item.getAlign(), item.getComponent() );
+			if ( item.getColumn() == null ) {
+				this.add( item.getRow(), item.getAlign(), item.getActualSize(), item.getComponent() );
 			} else {
-				this.add( item.getRow(), item.getColumn(), item.getAlign(), item.getComponent() );
+				this.add( item.getRow(), item.getColumn(), item.getAlign(), item.getActualSize(), item.getComponent() );
 			}
 		}
 	}
@@ -75,13 +70,15 @@ public class GridPanel extends DefaultPanel< GridPanel > implements Panel< GridP
 		return items;
 	}
 
-	private GridPanel add( int row, int column, int align, SwingComponent< ?, ? > component ) {
+	private GridPanel add( int row, int column, int align, boolean actualSize, SwingComponent< ?, ? > component ) {
 		
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.gridy = row;
 		constraints.gridx = column;
 		constraints.anchor = align;
-		constraints.fill = GridBagConstraints.BOTH;
+		if ( !actualSize ) {
+			constraints.fill = GridBagConstraints.BOTH;
+		}
 		constraints.weightx = 0.5;
 		constraints.weighty = 0.5;
 		constraints.insets = new Insets( space, space, space, space );
@@ -90,13 +87,15 @@ public class GridPanel extends DefaultPanel< GridPanel > implements Panel< GridP
 		return this;
 	}
 	
-	private GridPanel add( int row, int align, SwingComponent< ?, ? > component ) {
+	private GridPanel add( int row, int align, boolean actualSize, SwingComponent< ?, ? > component ) {
 		
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.gridy = row;
 		constraints.gridx = 0;
 		constraints.anchor = align;
-		constraints.gridwidth = GridBagConstraints.REMAINDER;
+		if ( !actualSize ) {
+			constraints.gridwidth = GridBagConstraints.REMAINDER;
+		}
 		constraints.insets = new Insets( space, space, space, space );
 		
 		toSwing().add( component.getJComponent(), constraints );

@@ -1,18 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/spring-client" xmlns:tns="http://www.example.org/spring-client" elementFormDefault="qualified">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.springclient.org/spring-client" xmlns:tns="http://www.springclient.org/spring-client" elementFormDefault="qualified">
 
     <element name="spring-client" type="tns:SpringClient"></element>
     
     <complexType name="SpringClient">
     	<sequence>
     		<element name="look-and-feel" type="tns:LookAndFeel" minOccurs="1" maxOccurs="1" />
+    		<element name="main-window" type="tns:MainWindow" minOccurs="1" maxOccurs="1" />
     	</sequence>
     </complexType>
     
-
     <complexType name="LookAndFeel">
     	<choice>
     		<element name="system" />
     	</choice>
+    </complexType>
+    
+    <complexType name="MainWindow">
+    	<sequence>
+    		<element name="menu-bar" type="tns:MenuBar" minOccurs="0" maxOccurs="1" />
+    		<element name="main-panel" type="tns:Panel" minOccurs="0" maxOccurs="1" />
+    	</sequence>
+
+   		<attribute name="caption" type="string" use="required" />
+    </complexType>
+    
+    <complexType name="MenuBar">
+    	<sequence>
+    		<element name="menu" type="tns:Menu" minOccurs="0" maxOccurs="unbounded" />
+    	</sequence>
+    </complexType>
+    
+    <complexType name="Menu">
+    	<sequence>
+    		<element name="menu-item" type="tns:MenuItem" minOccurs="0" maxOccurs="unbounded" />
+    	</sequence>
+    	<attribute name="caption" type="string" use="required" />
+    </complexType>
+    
+    <complexType name="MenuItem">
+    	<choice>
+    		<element name="action-reference" type="string" />
+    		<element name="action-class" type="string" />
+    	</choice>
+    	<attribute name="caption" type="string" use="required" />
+    </complexType>
+    
+    <complexType name="Panel">
+    	<choice>
+    		<element name="grid-panel" type="tns:GridPanel" />
+    		<element name="scroll-panel" type="tns:ScrollPanel" />
+    		<element name="tab-panel" type="tns:TabPanel" />
+    		<element name="x-box-panel" type="tns:XBoxPanel" />
+    		<element name="y-box-panel" type="tns:YBoxPanel" />
+    		<element name="x-split-panel" type="tns:XSplitPanel" />
+    		<element name="y-split-panel" type="tns:YSplitPanel" />
+    	</choice>
+    </complexType>
+    
+    <complexType name="GridPanel">
+    	<sequence>
+    		<element name="component" type="tns:GridPanelComponent" minOccurs="1" maxOccurs="1" />
+    	</sequence>
+    </complexType>
+    
+    <complexType name="GridPanelComponent">
+    	<!-- TODO -->
+    </complexType>
+    
+	<complexType name="ScrollPanel">
+    	<!-- TODO -->
+    </complexType>
+    
+	<complexType name="TabPanel">
+    	<!-- TODO -->
+    </complexType>
+    
+	<complexType name="XBoxPanel">
+    	<!-- TODO -->
+    </complexType>
+    
+	<complexType name="YBoxPanel">
+    	<!-- TODO -->
+    </complexType>
+    
+	<complexType name="XSplitPanel">
+    	<!-- TODO -->
+    </complexType>
+    
+	<complexType name="YSplitPanel">
+    	<!-- TODO -->
     </complexType>
 </schema>

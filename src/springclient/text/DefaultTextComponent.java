@@ -12,7 +12,7 @@ import springclient.BoundComponent;
 import springclient.DefaultSwingComponent;
 
 
-public abstract class DefaultTextComponent< T, J > extends DefaultSwingComponent< T, J >  implements BoundComponent, PropertyChangedListener< String > {
+public abstract class DefaultTextComponent< T, J > extends DefaultSwingComponent< T, J > implements BoundComponent, PropertyChangedListener< String > {
 
 	private static final Color disabledBackground = new Color( -2039837 );
 	private static final Color disabledForeground = new Color( -16777216 );
