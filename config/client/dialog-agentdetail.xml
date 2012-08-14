@@ -84,7 +84,7 @@
 										<property name="component"><bean class="springclient.simple.Button">
 											<property name="caption" value="Add..." />
 											<property name="enabled" value="true" />
-											<property name="action" ref="addLogFile" />
+											<property name="action" ref="openAddLogFileDialogAction" />
 										</bean></property>
 									</bean>
 								</list></property>
@@ -99,7 +99,10 @@
 									<property name="components"><list>
 										<bean class="springclient.simple.Button">
 											<property name="caption" value="Save" />
-											<property name="action"><bean class="springclient.action.DialogOk"><property name="dialog" ref="agentDetailDialog" /></bean></property>
+											<property name="action"><bean class="springclient.action.DialogOk">
+												<property name="dialog" ref="agentDetailDialog" />
+												<!-- property name="action" ref="saveAgentAction" /-->
+											</bean></property>
 										</bean>
 
 										<bean class="springclient.simple.DialogDefaultButton">

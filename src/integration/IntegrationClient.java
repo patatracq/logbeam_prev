@@ -34,10 +34,12 @@ public class IntegrationClient implements CyberspaceClient {
 			logger.warn( "Interrupted while waiting for channel lock", e );
 		}
 		
+		logger.debug( "Sending request: " + requestMessage );
 		requestChannel.send( requestMessage );
 		
 		@SuppressWarnings( "unchecked" )
 		Message< CyberspaceReply< ? > > replyMessage = (Message< CyberspaceReply< ? > >) replyChannel.receive( timeout * 1000L );
+		logger.debug( "Received response: " + replyMessage );
 		
 		channelLock.release();
 		

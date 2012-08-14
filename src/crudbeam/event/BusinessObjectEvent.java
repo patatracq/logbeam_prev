@@ -38,6 +38,21 @@ public class BusinessObjectEvent extends ApplicationEvent {
 		this.type = type;
 		this.businessObject = businessObject;
 	}
+	
+	public boolean changed() {
+		
+		return ( type instanceof BusinessObjectChanged );
+	}
+
+	public boolean created() {
+		
+		return ( type instanceof BusinessObjectCreated );
+	}
+
+	public boolean deleted() {
+		
+		return ( type instanceof BusinessObjectDeleted );
+	}
 
 	@Override
 	@JonasElement

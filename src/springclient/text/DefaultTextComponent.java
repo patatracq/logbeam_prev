@@ -69,5 +69,6 @@ public abstract class DefaultTextComponent< T, J > extends DefaultSwingComponent
 	public void save() {
 
 		textBinding.setValue( this, jTextComponent.getText() );
+		textBinding.save();
 	}
 }

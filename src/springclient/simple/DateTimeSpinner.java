@@ -34,6 +34,7 @@ public class DateTimeSpinner extends DefaultSwingComponent< DateTimeSpinner, JSp
 	public void save() {
 
 		millisecondsBinding.setValue( this, editor.getModel().getDate().getTime() );
+		millisecondsBinding.save();
 	}
 
 	@Override

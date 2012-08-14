@@ -1,7 +1,5 @@
 package springclient;
 
-import javax.swing.UIManager;
-
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -28,14 +26,6 @@ public class SpringClient {
 		return context.getBean( SpringClient.class );
 	}
 	
-	public SpringClient( LookAndFeel lookAndFeel ) {
-		
-		try {
-			UIManager.setLookAndFeel( lookAndFeel.getClassName() );
-		} catch ( Exception e ) {
-			throw new UiException( "Could not load look and feel due to: " + e.getMessage(), e );
-		}
-	}
 	
 	public void run() {
 		

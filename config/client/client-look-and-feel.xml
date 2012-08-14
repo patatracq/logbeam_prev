@@ -23,10 +23,7 @@
 		xsi:schemaLocation="http://www.springframework.org/schema/beans
 			http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<!-- Events -->
-	<bean id="regexFocusEventFactory" class="logbeam.client.event.RegexFocusEventFactory" />
-	<bean id="regexUnfocusEventFactory" class="logbeam.client.event.RegexUnfocusEventFactory" />
-	
-	<bean id="agentSelectedEventFactory" class="logbeam.client.event.AgentSelectedEventFactory" />
-	<bean id="agentDeselectedEventFactory" class="logbeam.client.event.AgentDeselectedEventFactory" />
+	<bean class="springclient.lookandfeel.LookAndFeelSetter">
+		<constructor-arg><bean id="lookAndFeel" class="springclient.lookandfeel.System" /></constructor-arg>
+	</bean>
 </beans>

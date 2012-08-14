@@ -1,15 +1,14 @@
 package logbeam.client.bind.agent;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Required;
-
-import crudbeam.bind.PropertyBinding;
 
 import logbeam.business.Agent;
 import logbeam.business.LogFile;
 import logbeam.business.agent.AgentContainer;
+
+import org.springframework.beans.factory.annotation.Required;
+
+import crudbeam.bind.PropertyBinding;
 
 
 public class AgentLogFiles extends PropertyBinding< List< LogFile > > {
@@ -27,11 +26,20 @@ public class AgentLogFiles extends PropertyBinding< List< LogFile > > {
 	@Override
 	public List< LogFile > getValue() {
 
-		if ( agent != null ) {
-			return agent.getLogFiles();
-		} else {
-			return new ArrayList< LogFile >();
+		if ( agent == null ) {
+			agent = (Agent) container.get( 0L );
 		}
+
+		return agent.getLogFiles();
+	}
+	
+	public void add( LogFile logFile ) {
+		if ( agent == null ) {
+			agent = (Agent) container.get( 0L );
+		}
+
+		agent.getLogFiles().add( logFile );
+		notifyListeners( agent.getLogFiles() );
 	}
 
 	@Override
@@ -44,7 +52,7 @@ public class AgentLogFiles extends PropertyBinding< List< LogFile > > {
 		agent.setLogFiles( value );
 		notifyListeners( agent.getLogFiles() );
 	}
-
+	
 	@Override
 	public void setValue( PropertyBinding< ? > value ) {
 		

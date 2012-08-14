@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring-client
+		xmlns="http://www.springclient.org/spring-client"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.springclient.org/spring-client ../../src/springclient/schema/spring-client.xsd">
+	
+	<look-and-feel><system /></look-and-feel>
+	
+	<main-window caption="LogBeam 0.7">
+		<menu-bar>
+			<menu caption="File">
+				<menu-item caption="Exit"><action-class>springclient.action.Exit</action-class></menu-item>
+			</menu>
+			
+			<menu caption="Agents">
+				<menu-item caption="Add..."><action-reference>newAgentAction</action-reference></menu-item>
+			</menu>
+			
+			<menu caption="Messages">
+				<menu-item caption="Pause"><action-reference>pauseMessageAction</action-reference></menu-item>
+				<menu-item caption="Clear Client Cache"><action-reference>clearClientCacheAction</action-reference></menu-item>
+				<menu-item caption="Get Newer Than..."><action-reference>getNewerThanAction</action-reference></menu-item>
+			</menu>
+		</menu-bar>
+	</main-window>
+</spring-client>

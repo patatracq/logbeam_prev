@@ -23,6 +23,7 @@ import crudbeam.action.Action;
 public class Tree extends DefaultSwingComponent< Tree, JTree > implements TreeModelListener, TreeSelectionListener, MouseListener {
 
 	public Action selectAction;
+	public Action deselectAction;
 	public Action doubleClickAction;
 	
 	public Tree( TreeModel treeModel ) {
@@ -60,6 +61,11 @@ public class Tree extends DefaultSwingComponent< Tree, JTree > implements TreeMo
 		this.selectAction = selectAction;
 	}
 	
+	public void setDeselectAction( Action deselectAction ) {
+		
+		this.deselectAction = deselectAction;
+	}
+	
 	public void setDoubleClickAction( Action doubleClickAction ) {
 		
 		this.doubleClickAction = doubleClickAction;
@@ -68,8 +74,10 @@ public class Tree extends DefaultSwingComponent< Tree, JTree > implements TreeMo
 	@Override
 	public void valueChanged( TreeSelectionEvent e ) {
 
-		if ( selectAction != null ) {
+		if ( toSwing().getSelectionCount() > 0 && selectAction != null ) {
 			selectAction.execute( this );
+		} else if ( toSwing().getSelectionCount() == 0 && deselectAction != null ) {
+			deselectAction.execute( this );
 		}
 	}
 

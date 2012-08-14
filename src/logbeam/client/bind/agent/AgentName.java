@@ -43,7 +43,7 @@ public class AgentName extends PropertyBinding< String > {
 	@Override
 	public void setValue( PropertyBinding< ? > value ) {
 		
-		if ( value.getValue().getClass().equals( String.class ) ) {
+		if ( value != null && value.getValue() != null && value.getValue().getClass().equals( String.class ) ) {
 			setValue( (String) value.getValue() );
 		}
 	}

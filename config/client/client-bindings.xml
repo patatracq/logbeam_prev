@@ -31,7 +31,9 @@
 		<property name="container" ref="agentCyberspaceContainer" />
 	</bean>
 	
-	<bean id="logFilenameBinding" class="logbeam.client.bind.logfile.LogFilename" />
+	<bean id="logFilenameBinding" class="logbeam.client.bind.logfile.LogFilename">
+		<property name="container" ref="logFileCyberspaceContainer" />
+	</bean>
 	
 	<bean id="logMessageBinding" class="logbeam.client.bind.logmessage.LogMessage" />
 

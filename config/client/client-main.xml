@@ -23,9 +23,20 @@
 		xsi:schemaLocation="http://www.springframework.org/schema/beans
 			http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+	<import resource="client-look-and-feel.xml" />
+	
 	<!-- GUI Spec -->
-	<bean id="agentTree" class="logbeam.client.AgentTree">
+	<bean id="agentTreeModel" class="logbeam.client.AgentTree">
 		<property name="agentContainer" ref="agentCyberspaceContainer" />
+	</bean>
+	
+	<bean id="agentTree" class="springclient.tree.Tree">
+		<constructor-arg><bean class="springclient.tree.GenericTreeModel"><constructor-arg ref="agentTreeModel" /></bean></constructor-arg>
+		<property name="selectionModel"><bean class="springclient.tree.SelectionModelDiscontiguos" /></property>
+		<property name="renderer"><bean class="logbeam.client.AgentTreeCellRenderer" /></property>
+		<property name="selectAction" ref="selectAgentsAction" />
+		<property name="deselectAction" ref="deselectAgentsAction" />
+		<property name="doubleClickAction" ref="editAgentAction" />
 	</bean>
 
 	<bean id="logMessagesTable" class="logbeam.client.LogMessagesTable" />
@@ -35,12 +46,11 @@
 	</bean>
 
 	<bean class="springclient.SpringClient">
-		<constructor-arg><bean class="springclient.lookandfeel.System" /></constructor-arg>
 		
 		<!-- Stuff to load after the main window has been created (and after IoC containter creation) -->
 		<property name="loadables">
 			<list>
-				<ref bean="agentTree" />
+				<ref bean="agentTreeModel" />
 				<ref bean="messageFiltersTable" />
 			</list>
 		</property>
@@ -67,6 +77,14 @@
 							<bean class="springclient.menu.MenuItem">
 								<property name="caption" value="Add..." />
 								<property name="action" ref="newAgentAction" />
+							</bean>
+							
+							<bean class="springclient.menu.MenuItem">
+								<property name="caption" value="Delete" />
+								<property name="enabled" value="false" />
+								<property name="action" ref="deleteAgentAction" />
+								<property name="activationEvent" value="logbeam.client.event.AgentSelectedEvent" />
+								<property name="deactivationEvent" value="logbeam.client.event.AgentDeselectedEvent" />
 							</bean>
 						</list></property>
 					</bean>
@@ -97,13 +115,7 @@
 				<property name="tabs"><map>
 					<entry key="Log Messages"><bean class="springclient.panel.XSplitPanel">
 						<property name="left"><bean class="springclient.panel.Scroll">
-							<constructor-arg><bean class="springclient.tree.Tree">
-								<constructor-arg><bean class="springclient.tree.GenericTreeModel"><constructor-arg ref="agentTree" /></bean></constructor-arg>
-								<property name="selectionModel"><bean class="springclient.tree.SelectionModelDiscontiguos" /></property>
-								<property name="renderer"><bean class="logbeam.client.AgentTreeCellRenderer" /></property>
-								<property name="selectAction" ref="selectAgentsAction" />
-								<property name="doubleClickAction" ref="editAgentAction" />
-							</bean></constructor-arg>
+							<constructor-arg><ref bean="agentTree" /></constructor-arg>
 							
 							<property name="preferredSize"><bean class="springclient.GoldenRatioDimension"><property name="height" value="400" /></bean></property>
 						</bean></property>

@@ -6,15 +6,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 import jonas.JonasUnmarshalListener;
 import jonas.annotations.JonasElement;
 import jonas.annotations.JonasExcludeIfAncestor;
+
+import org.hibernate.annotations.Cascade;
+
 import crudbeam.business.BusinessPojo;
 
 @Entity
@@ -38,8 +41,10 @@ public class Agent extends BusinessPojo implements JonasUnmarshalListener {
 		this.name = name;
 	}
 
-	@OneToMany( fetch = FetchType.EAGER )
-	@JoinColumn( name = "agent_id" )
+//	@OneToMany( fetch = FetchType.EAGER )
+	@OneToMany( cascade = { CascadeType.REMOVE  }, mappedBy = "agent", fetch = FetchType.EAGER )
+	@Cascade( org.hibernate.annotations.CascadeType.SAVE_UPDATE )
+//	@JoinColumn( name = "agent_id" )
 	@JonasElement
 	@JonasExcludeIfAncestor( ancestorClass = LogFile.class )
 	public List< LogFile > getLogFiles() {

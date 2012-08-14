@@ -4,7 +4,6 @@ package logbeam.business;
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import jonas.annotations.JonasElement;
@@ -23,7 +22,7 @@ public class LogFile extends BusinessPojo {
 	private String statusInformation = STATUS_UNKNOWN;
 	
 	@ManyToOne
-	@JoinColumn( name = "agent_id", updatable = false, insertable = false )
+//	@JoinColumn( name = "agent_id", updatable = false, insertable = false )
 	@JonasElement
 	@JonasExcludeIfAncestor( ancestorClass = Agent.class )
 	public Agent getAgent() {

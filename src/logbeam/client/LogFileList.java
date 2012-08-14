@@ -1,30 +1,28 @@
 package logbeam.client;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import logbeam.business.LogFile;
+import springclient.BoundComponent;
+import springclient.list.DomainSpecificListModel;
 import crudbeam.bind.PropertyBinding;
 import crudbeam.bind.PropertyChangedListener;
 
-import logbeam.business.LogFile;
-import springclient.list.DomainSpecificListModel;
 
+public class LogFileList extends DomainSpecificListModel implements PropertyChangedListener< List< LogFile > >, BoundComponent {
 
-public class LogFileList extends DomainSpecificListModel implements PropertyChangedListener< List< LogFile > > {
-
-	private List< LogFile > logFiles = new ArrayList< LogFile >();
 	private PropertyBinding< List< LogFile > > binding;
 	
 	@Override
 	public Object getElementAt( int index ) {
 		
-		return logFiles.get( index );
+		return binding.getValue().get( index );
 	}
 
 	@Override
 	public int getSize() {
 
-		return logFiles.size();
+		return binding.getValue().size();
 	}
 
 	public void setBinding( PropertyBinding< List< LogFile > > binding ) {
@@ -38,14 +36,18 @@ public class LogFileList extends DomainSpecificListModel implements PropertyChan
 	@Override
 	public void propertyChanged( List< LogFile > newValue ) {
 
-		if ( logFiles.size() > 0 ) {
-			super.itemsDeleted( 0, logFiles.size() - 1 );
+		if ( binding.getValue().size() > 0 ) {
+			super.itemsDeleted( 0, binding.getValue().size() - 1 );
 		}
 		
-		logFiles = newValue;
-
-		if ( logFiles.size() > 0 ) {
-			super.itemsInserted( 0, logFiles.size() - 1 );
+		if ( binding.getValue().size() > 0 ) {
+			super.itemsInserted( 0, binding.getValue().size() - 1 );
 		}
+	}
+
+	@Override
+	public void save() {
+		
+		binding.save();
 	}
 }

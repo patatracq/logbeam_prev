@@ -108,15 +108,40 @@ public class AgentTree extends DomainSpecificTreeModel implements Loadable, Appl
 	
 	private void handleAgentEvent( BusinessObjectEvent event ) {
 		
-		updateTree( (Agent) event.getBusinessObject() );
+		Agent agent = (Agent) event.getBusinessObject();
+		
+		if ( event.created() ) {
+			agents.add( agent );
+			
+			treeNodesInserted( new TreeModelEvent( this, new TreePath( this ), new int[] { getIndexOfChild( this, agent ) }, new Object[] { agent } ) );
+		} else if ( event.changed() ) {
+			if ( agents.contains( agent ) ) {
+				List< Agent > oldTree = new ArrayList< Agent >( agents );
+				if ( agent.notEquals( oldTree.get( oldTree.indexOf( agent ) ) ) ) {
+					logger.debug( "Agent " + agent.getName() + " has changed. Updating tree." );
+					agents.remove( agent );
+					agents.add( agent );
+					
+					treeNodesChanged( new TreeModelEvent( this, new TreePath( this ), new int[] { getIndexOfChild( this, agent ) }, new Object[] { agent } ) );
+				}
+			} else {
+				agents.add( agent );
+				
+				treeNodesInserted( new TreeModelEvent( this, new TreePath( this ), new int[] { getIndexOfChild( this, agent ) }, new Object[] { agent } ) );
+			}
+		} else if ( event.deleted() ) {
+			if ( agents.contains( agent ) ) {
+				agents.remove( agent );
+				
+				super.treeStructureChanged( new TreeModelEvent( this, new TreePath( this ), new int[] { getIndexOfChild( this, agent ) }, new Object[] { agent } ) );
+			}
+		}
 	}
 
 	private void handleLogFileEvent( BusinessObjectEvent event ) {
 		
 		LogFile logFile = (LogFile) event.getBusinessObject();
 		Agent agent = logFile.getAgent();
-		
-		updateTree( agent );
 		
 		int logFileIndex = agent.getLogFiles().indexOf( logFile );
 		if ( logFileIndex == -1 ) {
@@ -129,26 +154,6 @@ public class AgentTree extends DomainSpecificTreeModel implements Loadable, Appl
 		}
 		
 		treeNodesChanged( new TreeModelEvent( this, new TreePath( this ), new int[] { getIndexOfChild( this, agent ) }, new Object[] { agent } ) );
-	}
-	
-	private void updateTree( Agent agent ) {
-		
-		if ( agents.contains( agent ) ) {
-			
-if (agent.getName().equals("wdp303")){logger.debug( agent.print() );}
-			List< Agent > oldTree = new ArrayList< Agent >( agents );
-			if ( agent.notEquals( oldTree.get( oldTree.indexOf( agent ) ) ) ) {
-				logger.debug( "Agent " + agent.getName() + " has changed. Updating tree." );
-				agents.remove( agent );
-				agents.add( agent );
-				
-				treeNodesChanged( new TreeModelEvent( this, new TreePath( this ), new int[] { getIndexOfChild( this, agent ) }, new Object[] { agent } ) );
-			}
-		} else {
-			agents.add( agent );
-			
-			treeNodesInserted( new TreeModelEvent( this, new TreePath( this ), new int[] { getIndexOfChild( this, agent ) }, new Object[] { agent } ) );
-		}
 	}
 	
 	private class AgentComparator implements Comparator< Agent > {

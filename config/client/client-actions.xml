@@ -103,9 +103,33 @@
 		<property name="actions"><list>
 			<bean class="springclient.action.ResetBinding"><property name="binding" ref="agentNameBinding" /></bean>
 			<bean class="springclient.action.ResetBinding"><property name="binding" ref="agentLogFilesBinding" /></bean>
+			
 			<bean class="springclient.action.OpenDialog"><property name="dialog" ref="agentDetailDialog" /></bean>
 		</list></property>
 	</bean>
+	
+	<bean id="deleteAgentAction" class="crudbeam.action.ActionChain">
+		<property name="actions"><list>
+			<bean class="logbeam.client.action.agent.GetSelectedAgent">
+				<property name="agentTree" ref="agentTree" />
+				<property name="name" ref="agentNameBinding" />
+				<property name="logFiles" ref="agentLogFilesBinding" />
+			</bean>
+
+			<bean class="crudbeam.action.DeleteBinding"><property name="binding" ref="agentNameBinding" /></bean>
+
+			<bean class="springclient.action.ResetBinding"><property name="binding" ref="agentNameBinding" /></bean>
+			<bean class="springclient.action.ResetBinding"><property name="binding" ref="agentLogFilesBinding" /></bean>
+		</list></property>
+	</bean>
+	
+	<!-- Is really necessary? -->
+	<!-- bean id="saveAgentAction" class="crudbeam.action.ActionChain">
+		<property name="actions"><list>
+			<bean class="crudbeam.action.SaveBinding"><property name="binding" ref="agentNameBinding" /></bean>
+			<bean class="crudbeam.action.SaveBinding"><property name="binding" ref="agentLogFilesBinding" /></bean>
+		</list></property>
+	</bean-->
 	
 	<bean id="editAgentAction" class="crudbeam.action.ActionChain">
 		<property name="actions"><list>
@@ -113,20 +137,27 @@
 			<bean class="springclient.action.ResetBinding"><property name="binding" ref="agentLogFilesBinding" /></bean>
 			
 			<bean class="logbeam.client.action.agent.GetSelectedAgent">
+				<property name="agentTree" ref="agentTree" />
 				<property name="name" ref="agentNameBinding" />
 				<property name="logFiles" ref="agentLogFilesBinding" />
 			</bean>
+			
 		 	<bean class="springclient.action.OpenDialog"><property name="dialog" ref="agentDetailDialog" /></bean>
 		</list></property>
 	</bean>
 	
 	<!-- Log File Actions -->
-	<bean id="addLogFile" class="crudbeam.action.ActionChain">
+	<bean id="openAddLogFileDialogAction" class="crudbeam.action.ActionChain">
 		<property name="actions"><list>
 			<bean class="springclient.action.ResetBinding"><property name="binding" ref="logFilenameBinding" /></bean>
 			
 			<bean class="springclient.action.OpenDialog"><property name="dialog" ref="addLogFileDialog" /></bean>
 		</list></property>
+	</bean>
+	
+	<bean id="addToLogFileListAction" class="logbeam.client.action.logfile.AddToLogFileList">
+		<property name="logFilename" ref="logFilenameBinding" />
+		<property name="agentLogFiles" ref="agentLogFilesBinding" />
 	</bean>
 	
 	<!-- Message Actions -->
@@ -167,7 +198,12 @@
 		<property name="logMessagesTable" ref="logMessagesTable" />
 	</bean>
 	
-	<bean id="selectAgentsAction" class="logbeam.client.action.agent.SelectAgents">
-		<property name="logMessagesTable" ref="logMessagesTable" />
+	<bean id="selectAgentsAction" class="crudbeam.action.ActionChain">
+		<property name="actions"><list>
+			<bean class="logbeam.client.action.agent.SelectAgents"><property name="logMessagesTable" ref="logMessagesTable" /></bean>
+			<bean class="crudbeam.action.FireEvent"><property name="eventFactory" ref="agentSelectedEventFactory" /></bean>
+		</list></property>
 	</bean>
+	
+	<bean id="deselectAgentsAction" class="crudbeam.action.FireEvent"><property name="eventFactory" ref="agentDeselectedEventFactory" /></bean>
 </beans>
