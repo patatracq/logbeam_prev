@@ -120,4 +120,16 @@ public class AgentDatabaseContainer extends DatabaseContainer
 		
 		logger.debug( "Done" );
 	}
+
+	@Override
+	protected Long getPersistentId( BusinessPojo businessObject ) {
+		
+		if ( businessObject instanceof Agent ) {
+			Agent agent = (Agent) businessObject;
+			Agent persistedAgent = getByName( agent.getName() );
+			return ( persistedAgent == null ? null : persistedAgent.getId() );
+		} else {
+			throw new RuntimeException( "Illegal parameter businessObject to AgentDatabaseContainer.getPersistentId. Parameter should be an instance of Agent, but is " + businessObject.getClass().getName() );
+		}
+	}
 }

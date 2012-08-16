@@ -24,7 +24,7 @@
 			http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<!-- Filter Actions -->
-	<bean id="deleteFilterAction" class="crudbeam.action.DeleteBinding">
+	<bean id="deleteFilterAction" class="crudbeam.action.DeleteBindingAction">
 		<property name="binding" ref="logMessageFilterRegexBinding" />
 	</bean>
 	
@@ -116,20 +116,22 @@
 				<property name="logFiles" ref="agentLogFilesBinding" />
 			</bean>
 
-			<bean class="crudbeam.action.DeleteBinding"><property name="binding" ref="agentNameBinding" /></bean>
+			<bean class="crudbeam.action.DeleteBindingAction"><property name="binding" ref="agentNameBinding" /></bean>
 
 			<bean class="springclient.action.ResetBinding"><property name="binding" ref="agentNameBinding" /></bean>
 			<bean class="springclient.action.ResetBinding"><property name="binding" ref="agentLogFilesBinding" /></bean>
 		</list></property>
 	</bean>
 	
-	<!-- Is really necessary? -->
-	<!-- bean id="saveAgentAction" class="crudbeam.action.ActionChain">
+	<bean id="saveAgentAction" class="crudbeam.action.ActionChain">
 		<property name="actions"><list>
 			<bean class="crudbeam.action.SaveBinding"><property name="binding" ref="agentNameBinding" /></bean>
 			<bean class="crudbeam.action.SaveBinding"><property name="binding" ref="agentLogFilesBinding" /></bean>
+
+			<bean class="springclient.action.ResetBinding"><property name="binding" ref="agentNameBinding" /></bean>
+			<bean class="springclient.action.ResetBinding"><property name="binding" ref="agentLogFilesBinding" /></bean>
 		</list></property>
-	</bean-->
+	</bean>
 	
 	<bean id="editAgentAction" class="crudbeam.action.ActionChain">
 		<property name="actions"><list>

@@ -30,17 +30,17 @@ import jonas.annotations.JonasElement;
 public abstract class BusinessPojo {
 
 	private Long id;
-	
+
 	@Id
 	@GeneratedValue
 	@JonasElement
 	public Long getId() {
-	
+
 		return id;
 	}
-	
+
 	public void setId( Long id ) {
-		
+
 		this.id = id;
 	}
 }

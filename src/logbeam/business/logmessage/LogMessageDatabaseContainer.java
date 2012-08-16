@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import logbeam.business.Agent;
 import logbeam.business.LogMessage;
 import logbeam.server.MessageFilter;
 
@@ -69,6 +70,26 @@ public class LogMessageDatabaseContainer extends DatabaseContainer
 		return messages;
 	}
 
+	@Transactional
+	public LogMessage getByMessageAndLogFile( String logMessage, Long logFileId ) {
+		
+		logger.debug( "Executing query LogMessageDatabaseContainer.getByMessageAndLogFile( " + logMessage + ", " + logFileId + " )" );
+		
+		@SuppressWarnings( "unchecked" )
+		List< LogMessage > results = getCurrentSession().createCriteria( LogMessage.class )
+			.add( Restrictions.eq( "logMessage", logMessage ) )
+			.add( Restrictions.eq( "logFile_id", logFileId ) )
+		    .list();
+		
+		logger.debug( "Done" );
+		
+		if ( !results.isEmpty() ) {
+			return results.get( 0 );
+		} else {
+			return null;
+		}
+	}
+
 	@SuppressWarnings( "unchecked" )
 	@Override
 	@Transactional
@@ -108,5 +129,17 @@ public class LogMessageDatabaseContainer extends DatabaseContainer
 	public void setFilter( MessageFilter filter ) {
 		
 		this.filter = filter;
+	}
+
+	@Override
+	protected Long getPersistentId( BusinessPojo businessObject ) {
+
+		if ( businessObject instanceof Agent ) {
+			LogMessage logMessage = (LogMessage) businessObject;
+			LogMessage persistedLogMessage = getByMessageAndLogFile( logMessage.getLogMessage(), ( logMessage.getLogFile() == null ? null : logMessage.getLogFile().getId() ) );
+			return ( persistedLogMessage == null ? null : persistedLogMessage.getId() );
+		} else {
+			throw new RuntimeException( "Illegal parameter businessObject to LogMessageDatabaseContainer.getPersistentId. Parameter should be an instance of LogMessage, but is " + businessObject.getClass().getName() );
+		}
 	}
 }

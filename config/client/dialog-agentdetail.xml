@@ -101,7 +101,7 @@
 											<property name="caption" value="Save" />
 											<property name="action"><bean class="springclient.action.DialogOk">
 												<property name="dialog" ref="agentDetailDialog" />
-												<!-- property name="action" ref="saveAgentAction" /-->
+												<property name="action" ref="saveAgentAction" />
 											</bean></property>
 										</bean>
 

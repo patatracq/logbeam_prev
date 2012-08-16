@@ -15,8 +15,10 @@ public class ResetBinding extends Action {
 	@Override
 	protected void executeAction( Object source ) {
 		
-		logger.debug( "Executing action ResetBinding" );
+		logger.debug( "Executing action ResetBinding for " + binding );
+		
 		binding.reset();
+		
 		logger.debug( "Done" );
 	}
 

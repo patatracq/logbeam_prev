@@ -17,6 +17,7 @@
 package crudbeam.database;
 
 import org.apache.log4j.Logger;
+import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Required;
@@ -47,12 +48,34 @@ public abstract class DatabaseContainer extends Container {
 		
 		logger.debug( "Executing statement DatabaseContainer.save( " + businessObject + " )" );
 		
-		if ( businessObject.getId() != null ) {
+		if ( businessObject.getId() == null ) {
+			Long persistentId = getPersistentId( businessObject );
+			
+			if ( persistentId == null ) {
+				logger.debug( "Inserting new object " + businessObject );
+				getCurrentSession().save( businessObject );
+				
+				logger.debug( "Publishing 'created' event" );
+				created( businessObject );
+			
+				logger.debug( "Done" );
+				return;
+			} else {
+				businessObject.setId( persistentId );
+			}
+		}
+		
+		try {
+			logger.debug( "Updating changed object " + businessObject );
 			getCurrentSession().update( businessObject );
+			
+			logger.debug( "Publishing 'changed' event" );
 			changed( businessObject );
-		} else {
-			getCurrentSession().save( businessObject );
-			created( businessObject );
+		} catch ( NonUniqueObjectException nuoe ) {
+			/*
+			 * Don't do anything. This can happen when two or more client 
+			 * bindings to the same object are saved in a sequence.
+			 */
 		}
 		
 		logger.debug( "Done" );
@@ -91,6 +114,16 @@ public abstract class DatabaseContainer extends Container {
 		
 		logger.debug( "Done" );
 	}
+	
+	/**
+	 * In order for the generic database container (this class) to know
+	 * if it should insert or update a specific object, the specific database
+	 * container must tell if the object already is persistant or not.
+	 * 
+	 * @param businessObject
+	 * @return true if the object exists in the database, false if not
+	 */
+	abstract protected Long getPersistentId( BusinessPojo businessObject );
 	
 	/**
 	 * For Spring Framework IoC use only.

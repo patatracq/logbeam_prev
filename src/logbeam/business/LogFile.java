@@ -92,7 +92,7 @@ public class LogFile extends BusinessPojo {
 	@Override
 	public int hashCode() {
 		
-		return agent.hashCode() + filename.hashCode();
+		return ( agent == null ? 0 : agent.hashCode() ) + ( filename == null ? 0 : filename.hashCode() );
 	}
 	
 	@Override

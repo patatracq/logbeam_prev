@@ -50,6 +50,10 @@ public abstract class CyberspaceContainer< T > extends Container implements
 	@Override
 	public void save( BusinessPojo businessObject ) {
 
+		if ( businessObject.getId() == null && businessObjects.containsKey( 0L ) ) {
+			businessObjects.remove( 0L );
+		}
+		
 		client.callServer(
 				new CyberspaceRequest(
 						getDatabaseContainerId(),
