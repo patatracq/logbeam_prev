@@ -122,7 +122,7 @@ public class AgentTree extends DomainSpecificTreeModel implements Loadable, Appl
 					agents.remove( agent );
 					agents.add( agent );
 					
-					treeNodesChanged( new TreeModelEvent( this, new TreePath( this ), new int[] { getIndexOfChild( this, agent ) }, new Object[] { agent } ) );
+					treeStructureChanged( new TreeModelEvent( this, new TreePath( this ) ) );
 				}
 			} else {
 				agents.add( agent );
@@ -133,7 +133,7 @@ public class AgentTree extends DomainSpecificTreeModel implements Loadable, Appl
 			if ( agents.contains( agent ) ) {
 				agents.remove( agent );
 				
-				super.treeStructureChanged( new TreeModelEvent( this, new TreePath( this ), new int[] { getIndexOfChild( this, agent ) }, new Object[] { agent } ) );
+				treeStructureChanged( new TreeModelEvent( this, new TreePath( this ), new int[] { getIndexOfChild( this, agent ) }, new Object[] { agent } ) );
 			}
 		}
 	}

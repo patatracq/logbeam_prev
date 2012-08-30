@@ -2,6 +2,7 @@ package logbeam.client;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.util.Iterator;
 
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -53,7 +54,7 @@ public class AgentTreeCellRenderer extends DefaultTreeCellRenderer {
 			}
 		} else if ( value instanceof LogFile ) {
 			LogFile logFile = (LogFile) value;
-			if ( logFile.getStatus() != null && logFile.getStatus() ) {
+			if ( ( logFile.getStatus() == null || ( logFile.getStatus() != null && logFile.getStatus() ) )  && logFile.getAgent().getStatus() != null && logFile.getAgent().getStatus() ) {
 				super.setForeground( Color.BLACK );
 			} else {
 				super.setForeground( Color.RED );
@@ -61,5 +62,49 @@ public class AgentTreeCellRenderer extends DefaultTreeCellRenderer {
 		}
 		
 		return this;
+	}
+	
+	boolean isRootRed( AgentTree root ) {
+		
+		@SuppressWarnings( "unchecked" )
+		Iterator< Agent > iterator = (Iterator< Agent >) root.getChildren( root ).iterator();
+		while ( iterator.hasNext() ) {
+			Agent agent = iterator.next();
+			if ( isAgentRed( agent ) ) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	boolean isAgentRed( Agent agent ) {
+	
+		if ( agent.getStatus() == null || !agent.getStatus() ) {
+			return true;
+		}
+		
+		Iterator< LogFile > iterator = agent.getLogFiles().iterator();
+		while ( iterator.hasNext() ) {
+			LogFile logFile = iterator.next();
+			if ( isLogFileRed( logFile ) ) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	boolean isLogFileRed( LogFile logFile ) {
+		
+		if ( logFile.getAgent().getStatus() == null || !logFile.getAgent().getStatus() ) {
+			return true;
+		}
+		
+		if ( logFile.getStatus() == null || logFile.getStatus() ) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 }

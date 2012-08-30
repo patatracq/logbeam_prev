@@ -3,6 +3,7 @@ package logbeam.business.logmessage;
 import java.util.Collection;
 import java.util.Iterator;
 
+import logbeam.business.LogFile;
 import logbeam.business.LogMessage;
 import crudbeam.cyberspace.CyberspaceContainer;
 import crudbeam.cyberspace.CyberspaceRequest;
@@ -39,6 +40,12 @@ public class LogMessageCyberspaceContainer extends CyberspaceContainer< LogMessa
 		throw new RuntimeException( "deleteLogMessagesOlderThan not available in cyberspace" );
 	}
 	
+	@Override
+	public void deleteLogMessagesByLogFile( LogFile logFile ) {
+
+		throw new RuntimeException( "deleteLogMessagesByLogFile not available in cyberspace" );
+	}
+
 	@Override
 	protected LogMessage newObject() {
 

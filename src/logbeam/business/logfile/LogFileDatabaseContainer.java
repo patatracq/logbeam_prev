@@ -3,9 +3,11 @@ package logbeam.business.logfile;
 import java.util.List;
 
 import logbeam.business.LogFile;
+import logbeam.business.logmessage.LogMessageContainer;
 
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.transaction.annotation.Transactional;
 
 import crudbeam.business.BusinessPojo;
@@ -16,6 +18,8 @@ public class LogFileDatabaseContainer extends DatabaseContainer
 		implements LogFileContainer {
 
 	private static Logger logger = Logger.getLogger( LogFileDatabaseContainer.class );
+	
+	private LogMessageContainer logMessageContainer;
 	
 	@Override
 	@Transactional
@@ -44,6 +48,20 @@ public class LogFileDatabaseContainer extends DatabaseContainer
 		}
 	}
 
+	@Override
+	@Transactional
+	public void delete( BusinessPojo businessObject ) {
+		
+		logMessageContainer.deleteLogMessagesByLogFile( (LogFile) businessObject );
+		super.delete( businessObject );
+	}
+	
+	@Required
+	public void setLogMessageContainer( LogMessageContainer logMessageContainer ) {
+		
+		this.logMessageContainer = logMessageContainer;
+	}
+	
 	@Override
 	protected Long getPersistentId( BusinessPojo businessObject ) {
 

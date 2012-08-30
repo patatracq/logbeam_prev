@@ -41,10 +41,8 @@ public class Agent extends BusinessPojo implements JonasUnmarshalListener {
 		this.name = name;
 	}
 
-//	@OneToMany( fetch = FetchType.EAGER )
 	@OneToMany( cascade = { CascadeType.REMOVE  }, mappedBy = "agent", fetch = FetchType.EAGER )
 	@Cascade( org.hibernate.annotations.CascadeType.SAVE_UPDATE )
-//	@JoinColumn( name = "agent_id" )
 	@JonasElement
 	@JonasExcludeIfAncestor( ancestorClass = LogFile.class )
 	public List< LogFile > getLogFiles() {

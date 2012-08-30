@@ -22,7 +22,6 @@ public class LogFile extends BusinessPojo {
 	private String statusInformation = STATUS_UNKNOWN;
 	
 	@ManyToOne
-//	@JoinColumn( name = "agent_id", updatable = false, insertable = false )
 	@JonasElement
 	@JonasExcludeIfAncestor( ancestorClass = Agent.class )
 	public Agent getAgent() {
