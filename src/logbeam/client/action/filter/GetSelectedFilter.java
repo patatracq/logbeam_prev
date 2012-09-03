@@ -19,7 +19,7 @@ public class GetSelectedFilter extends Action {
 	
 	@Override
 	protected void executeAction( Object source ) {
-		
+	
 		if ( source != null && source instanceof Table ) {
 			Table table = (Table) source;
 			

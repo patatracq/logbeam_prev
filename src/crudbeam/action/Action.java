@@ -14,7 +14,7 @@ public abstract class Action implements ApplicationEventPublisherAware {
 	
 	public void execute( Object source ) {
 		
-		logger.debug( "Executing action " + this );
+		logger.debug( "Executing action " + this.getClass().getName() );
 
 		try {
 			executeAction( source );
@@ -22,7 +22,7 @@ public abstract class Action implements ApplicationEventPublisherAware {
 			error( "Error in action " + this, e );
 		}
 		
-		logger.debug( "Action " + this + " completed" );
+		logger.debug( "Action " + this.getClass().getName() + " completed" );
 	}
 	
 	protected abstract void executeAction( Object source );
